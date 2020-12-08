@@ -1,0 +1,35 @@
+using System;
+using Tomlyn.Model;
+
+namespace Nageli.Converters
+{
+    internal sealed class SimpleConverter<T> : TomlConverter<T>
+        where T : IEquatable<T>
+    {
+        public override T ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        {
+            if (value is TomlValue<T> tomlValue)
+            {
+                return tomlValue.Value;
+            }
+
+            throw new TomlException();
+        }
+
+        public override TomlObject ConvertTo(T value, TomlSerializerOptions options) => ToTomlObject(value);
+        
+        /// Adapted from:
+        /// https://github.com/xoofx/Tomlyn/blob/8f997483d3df29ee0ae217d75bad851ebc2ec0aa/src/Tomlyn/Model/TomlObject.cs
+        internal static TomlObject ToTomlObject(object value)
+            => value switch
+            {
+                TomlObject tomlObject => tomlObject,
+                string @string => new TomlString(@string),
+                long @long => new TomlInteger(@long),
+                bool @bool => new TomlBoolean(@bool),
+                double @double => new TomlFloat(@double),
+                DateTime dateTime => new TomlDateTime(ObjectKind.LocalDateTime, dateTime),
+                _ => throw new InvalidOperationException($"The type `{value.GetType()}` of the object is invalid. Only long, bool, double, DateTime and TomlObject are supported"),
+            };
+    }
+}
