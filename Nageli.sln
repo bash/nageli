@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nageli", "Nageli\Nageli.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Console\Console.csproj", "{7F7C13ED-B346-4979-BCB0-EBF0B943F5A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funcky.Nageli", "Funcky.Nageli\Funcky.Nageli.csproj", "{FAD143E2-EC14-4EE7-A3CC-1CEE387C3EA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{7F7C13ED-B346-4979-BCB0-EBF0B943F5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F7C13ED-B346-4979-BCB0-EBF0B943F5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F7C13ED-B346-4979-BCB0-EBF0B943F5A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAD143E2-EC14-4EE7-A3CC-1CEE387C3EA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAD143E2-EC14-4EE7-A3CC-1CEE387C3EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAD143E2-EC14-4EE7-A3CC-1CEE387C3EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAD143E2-EC14-4EE7-A3CC-1CEE387C3EA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
