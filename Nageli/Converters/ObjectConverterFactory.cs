@@ -5,11 +5,11 @@ using System.Reflection;
 
 namespace Nageli.Converters
 {
-    public sealed class ObjectConverterFactory : TomlConverterFactory
+    public sealed class ObjectConverterFactory : ITomlConverterFactory
     {
-        public override bool CanConvert(Type type) => true;
+        public bool CanConvert(Type type) => true;
 
-        public override TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+        public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
         {
             var constructor = GetConstructorForDeserialization(typeToConvert);
             var parameterConverters = constructor.GetParameters().Select(p => (p, options.GetConverter(p.ParameterType)));

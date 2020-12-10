@@ -19,13 +19,13 @@ namespace Funcky.Nageli
         public override TomlObject ConvertTo(Option<TItem> value, TomlSerializerOptions options) => throw new System.NotImplementedException();
     }
 
-    public sealed class OptionConverterFactory : TomlConverterFactory
+    public sealed class OptionConverterFactory : ITomlConverterFactory
     {
-        public override bool CanConvert(Type type)
+        public bool CanConvert(Type type)
             => type.IsGenericType &&
                type.GetGenericTypeDefinition() == typeof(Option<>);
 
-        public override TomlConverter CreateConverter(Type optionType, TomlSerializerOptions options)
+        public TomlConverter CreateConverter(Type optionType, TomlSerializerOptions options)
             => (TomlConverter)Activator.CreateInstance(
                 typeof(OptionConverter<>).MakeGenericType(optionType.GetGenericArguments()),
                 options)!;

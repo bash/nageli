@@ -12,15 +12,14 @@ namespace Nageli
     {
         public static TomlSerializerOptions Default { get; } = new(
             propertyNamingPolicy: TomlNamingPolicy.Default,
-            converters: ImmutableArray.Create<TomlConverterFactory>(
-                new SimpleConverter<string>(),
-                new SimpleConverter<long>(),
-                new SimpleConverter<bool>(),
-                new SimpleConverter<double>(),
-                new Int32Converter(),
-                new SimpleConverter<DateTime>(),
-                new GuidConverter(),
-                new TomlObjectConverter(),
+            converters: ImmutableArray.Create<ITomlConverterFactory>(
+                new GenericConverterFactory<string>(new SimpleConverter<string>()),
+                new GenericConverterFactory<long>(new SimpleConverter<long>()),
+                new GenericConverterFactory<bool>(new SimpleConverter<bool>()),
+                new GenericConverterFactory<double>(new SimpleConverter<double>()),
+                new GenericConverterFactory<int>(new Int32Converter()),
+                new GenericConverterFactory<DateTime>(new SimpleConverter<DateTime>()),
+                new GenericConverterFactory<Guid>(new GuidConverter()),
                 new DictionaryConverterFactory(),
                 new NullableConverterFactory(),
                 new ObjectConverterFactory()));
@@ -29,9 +28,9 @@ namespace Nageli
 
         public ITomlNamingPolicy PropertyNamingPolicy { get; }
 
-        public IImmutableList<TomlConverterFactory> Converters { get; }
+        public IImmutableList<ITomlConverterFactory> Converters { get; }
 
-        private TomlSerializerOptions(ITomlNamingPolicy propertyNamingPolicy, IImmutableList<TomlConverterFactory> converters)
+        private TomlSerializerOptions(ITomlNamingPolicy propertyNamingPolicy, IImmutableList<ITomlConverterFactory> converters)
         {
             PropertyNamingPolicy = propertyNamingPolicy;
             Converters = converters;
@@ -42,8 +41,8 @@ namespace Nageli
             => ShallowClone(propertyNamingPolicy: namingPolicy);
 
         [Pure]
-        public TomlSerializerOptions WithConverters(params TomlConverterFactory[] converters)
-            => ShallowClone(converters: ImmutableArray.Create(converters).AddRange(Converters));
+        public TomlSerializerOptions WithConverter(ITomlConverterFactory converterFactory)
+            => ShallowClone(converters: ImmutableArray.Create(converterFactory).AddRange(Converters));
 
         [Pure]
         public TomlConverter GetConverter(Type typeToConvert)
@@ -66,7 +65,7 @@ namespace Nageli
 
         private TomlSerializerOptions ShallowClone(
             ITomlNamingPolicy? propertyNamingPolicy = null,
-            IImmutableList<TomlConverterFactory>? converters = null)
+            IImmutableList<ITomlConverterFactory>? converters = null)
             => new(
                 propertyNamingPolicy: propertyNamingPolicy ?? PropertyNamingPolicy,
                 converters: converters ?? Converters);

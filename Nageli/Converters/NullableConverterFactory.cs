@@ -2,13 +2,13 @@ using System;
 
 namespace Nageli.Converters
 {
-    internal sealed class NullableConverterFactory : TomlConverterFactory
+    internal sealed class NullableConverterFactory : ITomlConverterFactory
     {
-        public override bool CanConvert(Type type)
+        public bool CanConvert(Type type)
             => type.IsGenericType &&
                type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
-        public override TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+        public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
             => (TomlConverter)Activator.CreateInstance(
                 typeof(NullableConverter<>).MakeGenericType(typeToConvert.GetGenericArguments()),
                 options)!;

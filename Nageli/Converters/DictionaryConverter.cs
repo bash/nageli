@@ -13,8 +13,6 @@ namespace Nageli.Converters
         public DictionaryConverter(TomlSerializerOptions options)
             => _valueConverter = options.GetConverter<TValue>();
 
-        public override bool CanConvert(Type type) => true;
-        
         public override Dictionary<string, TValue> ConvertFrom(TomlObject value, TomlSerializerOptions options)
         {
             if (value is TomlTable tomlTable)
