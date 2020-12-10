@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Funcky.Monads;
 using Funcky.Nageli;
 using Nageli;
@@ -16,6 +18,15 @@ namespace NaegeliConsole
             Console.WriteLine(person1);
             var person2 = TomlSerializer.Deserialize<Person>("first_name = \"Jane\"\nlast_name = \"Doe\"\nage=25", options);
             Console.WriteLine(person2);
+
+            var dict1 = TomlSerializer.Deserialize<IDictionary<string, string>>(
+                "first_name = \"Jane\"\nlast_name = \"Doe\"\nmessage=\"Hello World\"");
+
+            var dict2 = TomlSerializer.Deserialize<ConcurrentDictionary<string, string>>(
+                "first_name = \"Jane\"\nlast_name = \"Doe\"\nmessage=\"Hello World\"");
+
+            var dict3 = TomlSerializer.Deserialize<SortedDictionary<string, string>>(
+                "first_name = \"Jane\"\nlast_name = \"Doe\"\nmessage=\"Hello World\"");
         }
     }
 

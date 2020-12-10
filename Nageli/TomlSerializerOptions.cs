@@ -8,6 +8,7 @@ using Nageli.Converters;
 
 namespace Nageli
 {
+    // TODO: make object deserialization strategy (constructor vs properties) configurable
     public sealed record TomlSerializerOptions
     {
         public static TomlSerializerOptions Default { get; } = new(
@@ -43,6 +44,13 @@ namespace Nageli
         [Pure]
         public TomlSerializerOptions WithConverter(ITomlConverterFactory converterFactory)
             => ShallowClone(converters: ImmutableArray.Create(converterFactory).AddRange(Converters));
+
+        [Pure]
+        public TomlSerializerOptions WithConverter<T>(TomlConverter<T> converter)
+            where T : notnull
+            => ShallowClone(
+                converters: ImmutableArray.Create<ITomlConverterFactory>(new GenericConverterFactory<T>(converter))
+                    .AddRange(Converters));
 
         [Pure]
         public TomlConverter GetConverter(Type typeToConvert)
