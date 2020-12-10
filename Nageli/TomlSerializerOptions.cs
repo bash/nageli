@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -21,7 +23,9 @@ namespace Nageli
                 new TomlObjectConverter(),
                 new DictionaryConverterFactory(),
                 new NullableConverterFactory(),
-                new ObjectConverter()));
+                new ObjectConverterFactory()));
+
+        private readonly IDictionary<Type, TomlConverter> _cachedConverters = new ConcurrentDictionary<Type, TomlConverter>();
 
         public ITomlNamingPolicy PropertyNamingPolicy { get; }
 
@@ -43,9 +47,18 @@ namespace Nageli
 
         [Pure]
         public TomlConverter GetConverter(Type typeToConvert)
-            => Converters.First(c => c.CanConvert(typeToConvert))
-                         .CreateConverter(typeToConvert, this);
-        
+        {
+            if (_cachedConverters.TryGetValue(typeToConvert, out var cachedConverter))
+            {
+                return cachedConverter;
+            }
+
+            var converter = Converters.First(c => c.CanConvert(typeToConvert))
+                .CreateConverter(typeToConvert, this);
+            _cachedConverters.TryAdd(typeToConvert, converter);
+            return converter;
+        }
+
         [Pure]
         public TomlConverter<T> GetConverter<T>()
             where T : notnull

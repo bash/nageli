@@ -1,8 +1,9 @@
-﻿using Funcky.Monads;
+﻿using System;
+using Funcky.Monads;
 using Funcky.Nageli;
 using Nageli;
 
-namespace Console
+namespace NaegeliConsole
 {
     class Program
     {
@@ -12,9 +13,9 @@ namespace Console
                 .WithPropertyNamingPolicy(TomlNamingPolicy.SnakeCase)
                 .WithConverters(new OptionConverterFactory());
             var person1 = TomlSerializer.Deserialize<Person>("first_name = \"Jane\"\nlast_name = \"Doe\"\nmessage=\"Hello World\"", options);
-            System.Console.WriteLine(person1);
+            Console.WriteLine(person1);
             var person2 = TomlSerializer.Deserialize<Person>("first_name = \"Jane\"\nlast_name = \"Doe\"\nage=25", options);
-            System.Console.WriteLine(person2);
+            Console.WriteLine(person2);
         }
     }
 
