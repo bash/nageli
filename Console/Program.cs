@@ -13,7 +13,8 @@ namespace NaegeliConsole
         {
             var options = TomlSerializerOptions.Default
                 .WithPropertyNamingPolicy(TomlNamingPolicy.SnakeCase)
-                .WithConverter(new OptionConverterFactory());
+                .WithMissingValuesPolicy(MissingValuesPolicy.Disallow)
+                .AddConverter(new OptionConverterFactory());
             var person1 = TomlSerializer.Deserialize<Person>("first_name = \"Jane\"\nlast_name = \"Doe\"\nmessage=\"Hello World\"", options);
             Console.WriteLine(person1);
             var person2 = TomlSerializer.Deserialize<Person>("first_name = \"Jane\"\nlast_name = \"Doe\"\nage=25", options);

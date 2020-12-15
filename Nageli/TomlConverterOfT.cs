@@ -16,7 +16,12 @@ namespace Nageli
             => ConvertTo((T)value, options);
 
         public virtual T ConvertFromAbsent(TomlSerializerOptions options)
-            => throw new TomlException();
+            => options.MissingValuesPolicy switch
+            {
+                MissingValuesPolicy.Disallow => throw new TomlException(),
+                MissingValuesPolicy.UseDefault => default!,
+                _ => throw new NotSupportedException(),
+            };
 
         public abstract T ConvertFrom(TomlObject value, TomlSerializerOptions options);
 

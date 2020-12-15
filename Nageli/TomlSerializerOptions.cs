@@ -13,6 +13,7 @@ namespace Nageli
     {
         public static TomlSerializerOptions Default { get; } = new(
             propertyNamingPolicy: TomlNamingPolicy.Default,
+            missingValuesPolicy: MissingValuesPolicy.UseDefault,
             converters: ImmutableArray.Create<ITomlConverterFactory>(
                 new GenericConverterFactory<string>(new SimpleConverter<string>()),
                 new GenericConverterFactory<long>(new SimpleConverter<long>()),
@@ -27,15 +28,25 @@ namespace Nageli
 
         private readonly IDictionary<Type, TomlConverter> _cachedConverters = new ConcurrentDictionary<Type, TomlConverter>();
 
+        public MissingValuesPolicy MissingValuesPolicy { get; }
+
         public ITomlNamingPolicy PropertyNamingPolicy { get; }
 
         public IImmutableList<ITomlConverterFactory> Converters { get; }
 
-        private TomlSerializerOptions(ITomlNamingPolicy propertyNamingPolicy, IImmutableList<ITomlConverterFactory> converters)
+        private TomlSerializerOptions(
+            MissingValuesPolicy missingValuesPolicy,
+            ITomlNamingPolicy propertyNamingPolicy,
+            IImmutableList<ITomlConverterFactory> converters)
         {
+            MissingValuesPolicy = missingValuesPolicy;
             PropertyNamingPolicy = propertyNamingPolicy;
             Converters = converters;
         }
+
+        [Pure]
+        public TomlSerializerOptions WithMissingValuesPolicy(MissingValuesPolicy missingValuesPolicy)
+            => ShallowClone(missingValuesPolicy: missingValuesPolicy);
 
         [Pure]
         public TomlSerializerOptions WithPropertyNamingPolicy(ITomlNamingPolicy namingPolicy)
@@ -74,9 +85,11 @@ namespace Nageli
             => (TomlConverter<T>)GetConverter(typeof(T));
 
         private TomlSerializerOptions ShallowClone(
+            MissingValuesPolicy? missingValuesPolicy = null,
             ITomlNamingPolicy? propertyNamingPolicy = null,
             IImmutableList<ITomlConverterFactory>? converters = null)
             => new(
+                missingValuesPolicy: missingValuesPolicy ?? MissingValuesPolicy,
                 propertyNamingPolicy: propertyNamingPolicy ?? PropertyNamingPolicy,
                 converters: converters ?? Converters);
     }
