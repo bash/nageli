@@ -1,10 +1,9 @@
 using System;
 using Funcky.Monads;
-using Nageli;
 
-namespace Funcky.Nageli
+namespace Nageli.Features.Option
 {
-    public sealed class OptionConverterFactory : ITomlConverterFactory
+    internal sealed class OptionConverterFactory : ITomlConverterFactory
     {
         public bool CanConvert(Type type)
             => type.IsGenericType &&

@@ -1,10 +1,9 @@
 using Funcky.Monads;
-using Nageli;
 using Tomlyn.Model;
 
-namespace Funcky.Nageli
+namespace Nageli.Features.Option
 {
-    public sealed class OptionConverter<TItem> : TomlConverter<Option<TItem>>
+    internal sealed class OptionConverter<TItem> : TomlConverter<Option<TItem>>
         where TItem : notnull
     {
         private readonly TomlConverter<TItem> _itemConverter;

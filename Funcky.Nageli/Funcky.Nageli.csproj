@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <RootNamespace>Funcky.Nageli</RootNamespace>
+        <RootNamespace>Nageli</RootNamespace>
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Funcky" Version="2.3.0" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Nageli\Nageli.csproj" />
+        <ProjectReference Include="..\Nageli\Nageli.csproj" />
     </ItemGroup>
 </Project>

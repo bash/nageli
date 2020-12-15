@@ -2,8 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Funcky.Monads;
-using Funcky.Nageli;
 using Nageli;
+using Nageli.Features.Option;
 using Nageli.Features.TaggedUnion;
 
 namespace NaegeliConsole
@@ -16,7 +16,7 @@ namespace NaegeliConsole
                 .WithPropertyNamingPolicy(TomlNamingPolicy.SnakeCase)
                 .WithMissingValuesPolicy(MissingValuesPolicy.Disallow)
                 .AddTaggedUnionConverter()
-                .AddConverter(new OptionConverterFactory());
+                .AddOptionConverter();
             var person1 = TomlSerializer.Deserialize<Person>("first_name = \"Jane\"\nlast_name = \"Doe\"\nmessage=\"Hello World\"", options);
             Console.WriteLine(person1);
             var person2 = TomlSerializer.Deserialize<Person>("first_name = \"Jane\"\nlast_name = \"Doe\"\nage=25", options);
