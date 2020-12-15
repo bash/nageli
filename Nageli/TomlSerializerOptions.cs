@@ -42,15 +42,17 @@ namespace Nageli
             => ShallowClone(propertyNamingPolicy: namingPolicy);
 
         [Pure]
-        public TomlSerializerOptions WithConverter(ITomlConverterFactory converterFactory)
-            => ShallowClone(converters: ImmutableArray.Create(converterFactory).AddRange(Converters));
+        public TomlSerializerOptions AddConverter(ITomlConverterFactory converterFactory)
+            => WithConverters(ImmutableArray.Create(converterFactory).AddRange(Converters));
 
         [Pure]
-        public TomlSerializerOptions WithConverter<T>(TomlConverter<T> converter)
+        public TomlSerializerOptions AddConverter<T>(TomlConverter<T> converter)
             where T : notnull
-            => ShallowClone(
-                converters: ImmutableArray.Create<ITomlConverterFactory>(new GenericConverterFactory<T>(converter))
-                    .AddRange(Converters));
+            => AddConverter(new GenericConverterFactory<T>(converter));
+
+        [Pure]
+        public TomlSerializerOptions WithConverters(IEnumerable<ITomlConverterFactory> converters)
+            => ShallowClone(converters: converters.ToImmutableList());
 
         [Pure]
         public TomlConverter GetConverter(Type typeToConvert)
@@ -60,8 +62,8 @@ namespace Nageli
                 return cachedConverter;
             }
 
-            var converter = Converters.First(c => c.CanConvert(typeToConvert))
-                .CreateConverter(typeToConvert, this);
+            var factory = Converters.First(c => c.CanConvert(typeToConvert));
+            var converter = factory.CreateConverter(typeToConvert, this);
             _cachedConverters.TryAdd(typeToConvert, converter);
             return converter;
         }
