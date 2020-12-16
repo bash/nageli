@@ -107,6 +107,12 @@ namespace Naegeli.Test
             Assert.Throws<TomlException>(() => TomlSerializer.Deserialize<ClassWithMultipleConstructorsMarkedAsTomlConstructor>(input));
         }
 
+        [Fact]
+        public void DeserializingATypeWithNoPublicConstructorsAndNoSettersThrows()
+        {
+            Assert.Throws<TomlException>(() => TomlSerializer.Deserialize<TypeWithNoPublicConstructor>(new TomlTable()));
+        }
+
         private sealed record Empty;
 
         private sealed record Person(string FirstName, string LastName);
@@ -170,6 +176,13 @@ namespace Naegeli.Test
 
             [TomlConstructor]
             public ClassWithMultipleConstructorsMarkedAsTomlConstructor(string a)
+            {
+            }
+        }
+
+        private sealed class TypeWithNoPublicConstructor
+        {
+            private TypeWithNoPublicConstructor()
             {
             }
         }
