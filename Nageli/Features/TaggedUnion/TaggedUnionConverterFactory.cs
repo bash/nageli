@@ -56,14 +56,4 @@ namespace Nageli.Features.TaggedUnion
             return options.PropertyNamingPolicy.ConvertName(tagKey);
         }
     }
-
-    internal sealed record TaggedUnionMetadata(
-        Type UnionType,
-        string TagKey,
-        IReadOnlyDictionary<string, TaggedUnionVariantMetadata> VariantsByTag);
-
-    internal sealed record TaggedUnionVariantMetadata(
-        Type VariantType,
-        string Tag,
-        TomlConverter Converter);
 }
