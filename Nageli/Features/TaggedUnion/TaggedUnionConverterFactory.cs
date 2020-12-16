@@ -20,28 +20,40 @@ namespace Nageli.Features.TaggedUnion
 
         public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
         {
-            var taggedUnionAttribute = typeToConvert.GetCustomAttribute<TomlTaggedUnionAttribute>()!;
-
-            // TODO: use type name when TagAttribute is not specified.
-            var variantsMetadata = typeToConvert.GetNestedTypes()
-                .Where(t => t.IsClass && !t.IsAbstract)
-                .Where(t => t.BaseType == typeToConvert)
-                .Select(variantType => new TaggedUnionVariantMetadata(
-                    VariantType: variantType,
-                    Converter: options.GetConverter(variantType),
-                    Tag: _taggedUnionOptions.TagNamingPolicy.ConvertName(
-                        variantType.GetCustomAttribute<TomlRenameAttribute>()?.Value ?? variantType.Name)))
+            var variantsMetadata = GetVariants(typeToConvert)
+                .Select(variantType => CreateVariantMetadata(options, variantType))
                 .ToImmutableDictionary(v => v.Tag);
 
-            var tagKey = options.PropertyNamingPolicy.ConvertName(taggedUnionAttribute.Tag ?? DefaultTagKey);
             var metadata = new TaggedUnionMetadata(
                 UnionType: typeToConvert,
-                TagKey: tagKey,
+                TagKey: GetTagKey(typeToConvert, options),
                 VariantsByTag: variantsMetadata);
 
             return (TomlConverter)Activator.CreateInstance(
                 typeof(TaggedUnionConverter<>).MakeGenericType(typeToConvert),
                 metadata)!;
+        }
+
+        private static IEnumerable<Type> GetVariants(Type typeToConvert)
+            => typeToConvert.GetNestedTypes()
+                .Where(t => t.IsClass && !t.IsAbstract)
+                .Where(t => t.BaseType == typeToConvert);
+
+        private TaggedUnionVariantMetadata CreateVariantMetadata(TomlSerializerOptions options, Type variantType)
+        {
+            var tag = variantType.GetCustomAttribute<TomlRenameAttribute>()?.Value ?? variantType.Name;
+            var tagAdjustedToNaming = _taggedUnionOptions.TagNamingPolicy.ConvertName(tag);
+            return new TaggedUnionVariantMetadata(
+                VariantType: variantType,
+                Converter: options.GetConverter(variantType),
+                Tag: tagAdjustedToNaming);
+        }
+
+        private static string GetTagKey(Type typeToConvert, TomlSerializerOptions options)
+        {
+            var taggedUnionAttribute = typeToConvert.GetCustomAttribute<TomlTaggedUnionAttribute>()!;
+            var tagKey = taggedUnionAttribute.Tag ?? DefaultTagKey;
+            return options.PropertyNamingPolicy.ConvertName(tagKey);
         }
     }
 

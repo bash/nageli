@@ -194,6 +194,10 @@ namespace Naegeli.Test.Features.TaggedUnion
             public abstract record Abstract : UnionWithInvalidNestedTypes;
 
             public sealed record Detached;
+
+            public enum Enumeration
+            {
+            }
         }
     }
 }
