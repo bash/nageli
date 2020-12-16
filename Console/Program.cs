@@ -48,7 +48,7 @@ namespace NaegeliConsole
 
     internal record Person(string FirstName, string LastName, int? Age, Option<string> Message);
 
-    [TomlTaggedUnion(tag: "type")]
+    [TomlTaggedUnion(Tag = "type")]
     internal abstract record EmailDelivery
     {
         [TomlTag("null")]

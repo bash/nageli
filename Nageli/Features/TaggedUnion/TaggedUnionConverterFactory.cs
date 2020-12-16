@@ -8,6 +8,8 @@ namespace Nageli.Features.TaggedUnion
 {
     internal sealed class TaggedUnionConverterFactory : ITomlConverterFactory
     {
+        private const string DefaultTagKey = "Type";
+
         private readonly TomlTaggedUnionOptions _taggedUnionOptions;
 
         public TaggedUnionConverterFactory(TomlTaggedUnionOptions taggedUnionOptions)
@@ -32,9 +34,10 @@ namespace Nageli.Features.TaggedUnion
                         variantType.GetCustomAttribute<TomlTagAttribute>()!.Value)))
                 .ToImmutableDictionary(v => v.Tag);
 
+            var tagKey = options.PropertyNamingPolicy.ConvertName(taggedUnionAttribute.Tag ?? DefaultTagKey);
             var metadata = new TaggedUnionMetadata(
                 UnionType: typeToConvert,
-                TagKey: options.PropertyNamingPolicy.ConvertName(taggedUnionAttribute.Tag),
+                TagKey: tagKey,
                 VariantsByTag: variantsMetadata);
 
             return (TomlConverter)Activator.CreateInstance(

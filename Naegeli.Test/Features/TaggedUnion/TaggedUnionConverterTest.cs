@@ -106,7 +106,29 @@ namespace Naegeli.Test.Features.TaggedUnion
                 TomlSerializer.Deserialize<NonAbstractUnion>("Type = \"Variant\"", options));
         }
 
-        [TomlTaggedUnion(tag: "Type")]
+        [Theory]
+        [MemberData(nameof(DeserializesTaggedUnionWithMinimalAttributeConfigurationData))]
+        public void DeserializesTaggedUnionWithMinimalAttributeConfiguration(UpdateMode expected, string toml)
+        {
+            var options = TomlSerializerOptions.Default.AddTaggedUnionConverter();
+            Assert.Equal(expected, TomlSerializer.Deserialize<UpdateMode>(toml, options));
+        }
+
+        public static TheoryData<UpdateMode, string> DeserializesTaggedUnionWithMinimalAttributeConfigurationData()
+            => new()
+            {
+                { new UpdateMode.Auto(), "Type = \"Auto\"" },
+                {
+                    new UpdateMode.Pinned("1.4.2"),
+                    "Type = \"Pinned\"\nVersion = \"1.4.2\""
+                },
+                {
+                    new UpdateMode.Latest("beta"),
+                    "Type = \"Latest\"\nChannelName = \"beta\""
+                },
+            };
+
+        [TomlTaggedUnion(Tag = "Type")]
         public abstract record EmailDelivery
         {
             [TomlTag(nameof(Null))]
@@ -125,11 +147,24 @@ namespace Naegeli.Test.Features.TaggedUnion
             }
         }
 
-        [TomlTaggedUnion(tag: "Type")]
+        [TomlTaggedUnion(Tag = "Type")]
         public record NonAbstractUnion
         {
             [TomlTag(nameof(Variant))]
             public sealed record Variant : NonAbstractUnion;
+        }
+
+        [TomlTaggedUnion]
+        public abstract record UpdateMode
+        {
+            [TomlTag(nameof(Auto))]
+            public sealed record Auto : UpdateMode;
+
+            [TomlTag(nameof(Pinned))]
+            public sealed record Pinned(string Version) : UpdateMode;
+
+            [TomlTag(nameof(Latest))]
+            public sealed record Latest(string ChannelName) : UpdateMode;
         }
     }
 }
