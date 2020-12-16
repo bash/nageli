@@ -26,11 +26,28 @@ namespace Nageli.Converters
         }
 
         private static ConstructorInfo GetConstructorForDeserialization(Type typeToConvert)
+            => GetMarkedConstructor(typeToConvert)
+                ?? GetFirstConstructorWithBiggestArity(typeToConvert)
+                ?? throw new TomlException($"No public constructor found for type {typeToConvert}");
+
+        private static ConstructorInfo? GetFirstConstructorWithBiggestArity(Type typeToConvert)
+            => typeToConvert
+                .GetConstructors()
+                .OrderByDescending(c => c.GetParameters().Length)
+                .FirstOrDefault();
+
+        private static ConstructorInfo? GetMarkedConstructor(Type typeToConvert)
         {
-            var constructors = typeToConvert.GetConstructors();
-            return constructors.SingleOrDefault(c => Attribute.IsDefined(c, typeof(TomlConstructorAttribute)))
-                ?? constructors.FirstOrDefault()
-                ?? throw new TomlException($"No public constructor found for {typeToConvert}");
+            var markedConstructors = typeToConvert
+                .GetConstructors()
+                .Where(c => Attribute.IsDefined(c, typeof(TomlConstructorAttribute)))
+                .ToImmutableList();
+            return markedConstructors.Count switch
+            {
+                0 => null,
+                1 => markedConstructors[0],
+                _ => throw new TomlException($"Multiple constructors marked with [TomlConstructor] found for type {typeToConvert}"),
+            };
         }
     }
 }

@@ -84,6 +84,19 @@ namespace Naegeli.Test
         }
 
         [Fact]
+        public void FirstConstructorIsUsedWhenDeserializingTypeWithoutSettersAndMultipleConstructorsOfSameArity()
+        {
+            var input = new TomlTable
+            {
+                [nameof(ClassWithMultipleConstructorsOfSameArity.FirstName)] = "Foo",
+                [nameof(ClassWithMultipleConstructorsOfSameArity.LastName)] = "Bar",
+            };
+            Assert.Equal(
+                new ClassWithMultipleConstructorsOfSameArity("Foo", "Bar"),
+                TomlSerializer.Deserialize<ClassWithMultipleConstructorsOfSameArity>(input));
+        }
+
+        [Fact]
         public void DeserializingATypeWithMultipleConstructorsMarkedAsTomlConstructorThrows()
         {
             var input = new TomlTable
@@ -131,6 +144,21 @@ namespace Naegeli.Test
                 FirstName = firstName;
                 LastName = lastName;
             }
+        }
+
+        private sealed record ClassWithMultipleConstructorsOfSameArity
+        {
+            public string FirstName { get; }
+
+            public string LastName { get; }
+
+            public ClassWithMultipleConstructorsOfSameArity(string firstName, string lastName)
+            {
+                FirstName = firstName;
+                LastName = lastName;
+            }
+
+            public ClassWithMultipleConstructorsOfSameArity(string firstName, int age) => throw new NotSupportedException();
         }
 
         private sealed record ClassWithMultipleConstructorsMarkedAsTomlConstructor
