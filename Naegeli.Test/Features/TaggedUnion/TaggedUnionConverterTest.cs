@@ -131,17 +131,17 @@ namespace Naegeli.Test.Features.TaggedUnion
         [TomlTaggedUnion(Tag = "Type")]
         public abstract record EmailDelivery
         {
-            [TomlTag(nameof(Null))]
+            [TomlRename(nameof(Null))]
             public sealed record Null : EmailDelivery
             {
             }
 
-            [TomlTag(nameof(Pickup))]
+            [TomlRename(nameof(Pickup))]
             public sealed record Pickup(string DirectoryPath) : EmailDelivery
             {
             }
 
-            [TomlTag(nameof(SmtpServer))]
+            [TomlRename(nameof(SmtpServer))]
             public sealed record SmtpServer(string Host, int Port) : EmailDelivery
             {
             }
@@ -150,7 +150,6 @@ namespace Naegeli.Test.Features.TaggedUnion
         [TomlTaggedUnion(Tag = "Type")]
         public record NonAbstractUnion
         {
-            [TomlTag(nameof(Variant))]
             public sealed record Variant : NonAbstractUnion;
         }
 

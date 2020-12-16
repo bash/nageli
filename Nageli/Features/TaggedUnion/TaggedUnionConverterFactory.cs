@@ -30,7 +30,7 @@ namespace Nageli.Features.TaggedUnion
                     VariantType: variantType,
                     Converter: options.GetConverter(variantType),
                     Tag: _taggedUnionOptions.TagNamingPolicy.ConvertName(
-                        variantType.GetCustomAttribute<TomlTagAttribute>()?.Value ?? variantType.Name)))
+                        variantType.GetCustomAttribute<TomlRenameAttribute>()?.Value ?? variantType.Name)))
                 .ToImmutableDictionary(v => v.Tag);
 
             var tagKey = options.PropertyNamingPolicy.ConvertName(taggedUnionAttribute.Tag ?? DefaultTagKey);
