@@ -114,6 +114,31 @@ namespace Naegeli.Test.Features.TaggedUnion
             Assert.Equal(expected, TomlSerializer.Deserialize<UpdateMode>(toml, options));
         }
 
+        [Theory]
+        [InlineData("Type = \"" + nameof(UnionWithInvalidNestedTypes.Abstract) + "\"")]
+        [InlineData("Type = \"" + nameof(UnionWithInvalidNestedTypes.Detached) + "\"")]
+        public void DeserializingInvalidNestedTypeDoesNotWork(string toml)
+        {
+            var options = TomlSerializerOptions.Default.AddTaggedUnionConverter();
+            Assert.Throws<TomlException>(() => TomlSerializer.Deserialize<UnionWithInvalidNestedTypes>(toml, options));
+        }
+
+        [Fact]
+        public void DeserializingVariantsDirectlyWorksWithoutDiscriminator()
+        {
+            var options = TomlSerializerOptions.Default.AddTaggedUnionConverter();
+            const string toml = "ChannelName = \"beta\"";
+            Assert.Equal(new UpdateMode.Latest("beta"), TomlSerializer.Deserialize<UpdateMode.Latest>(toml, options));
+        }
+
+        [Fact]
+        public void DeserializingVariantsDirectlyIgnoresNonMatchingDiscriminator()
+        {
+            var options = TomlSerializerOptions.Default.AddTaggedUnionConverter();
+            const string toml = "Type = \"Pinned\"\nChannelName = \"beta\"";
+            Assert.Equal(new UpdateMode.Latest("beta"), TomlSerializer.Deserialize<UpdateMode.Latest>(toml, options));
+        }
+
         public static TheoryData<UpdateMode, string> DeserializesTaggedUnionWithMinimalAttributeConfigurationData()
             => new()
             {
@@ -161,6 +186,14 @@ namespace Naegeli.Test.Features.TaggedUnion
             public sealed record Pinned(string Version) : UpdateMode;
 
             public sealed record Latest(string ChannelName) : UpdateMode;
+        }
+
+        [TomlTaggedUnion]
+        public abstract record UnionWithInvalidNestedTypes
+        {
+            public abstract record Abstract : UnionWithInvalidNestedTypes;
+
+            public sealed record Detached;
         }
     }
 }
