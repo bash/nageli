@@ -157,13 +157,10 @@ namespace Naegeli.Test.Features.TaggedUnion
         [TomlTaggedUnion]
         public abstract record UpdateMode
         {
-            [TomlTag(nameof(Auto))]
             public sealed record Auto : UpdateMode;
 
-            [TomlTag(nameof(Pinned))]
             public sealed record Pinned(string Version) : UpdateMode;
 
-            [TomlTag(nameof(Latest))]
             public sealed record Latest(string ChannelName) : UpdateMode;
         }
     }

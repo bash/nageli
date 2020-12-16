@@ -25,13 +25,12 @@ namespace Nageli.Features.TaggedUnion
             // TODO: use type name when TagAttribute is not specified.
             var variantsMetadata = typeToConvert.GetNestedTypes()
                 .Where(t => t.IsClass && !t.IsAbstract)
-                .Where(t => Attribute.IsDefined(t, typeof(TomlTagAttribute)))
                 .Where(t => t.BaseType == typeToConvert)
                 .Select(variantType => new TaggedUnionVariantMetadata(
                     VariantType: variantType,
                     Converter: options.GetConverter(variantType),
                     Tag: _taggedUnionOptions.TagNamingPolicy.ConvertName(
-                        variantType.GetCustomAttribute<TomlTagAttribute>()!.Value)))
+                        variantType.GetCustomAttribute<TomlTagAttribute>()?.Value ?? variantType.Name)))
                 .ToImmutableDictionary(v => v.Tag);
 
             var tagKey = options.PropertyNamingPolicy.ConvertName(taggedUnionAttribute.Tag ?? DefaultTagKey);
