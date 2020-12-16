@@ -17,21 +17,19 @@ namespace Nageli.Features.TaggedUnion
 
         private T ConvertFrom(TomlTable table, TomlSerializerOptions options)
         {
-            var tagKey = options.PropertyNamingPolicy.ConvertName(_metadata.TagKey);
-
-            if (!table.TryGetToml(tagKey, out var tag))
+            if (!table.TryGetToml(_metadata.TagKey, out var tag))
             {
-                throw new TomlException();
+                throw new TomlException($"Missing key \"{_metadata.TagKey}\" in table");
             }
 
             if (tag is not TomlString tagString)
             {
-                throw new TomlException();
+                throw new TomlException($"Unexpected type \"{tag.Kind}\" for \"{_metadata.TagKey}\", must be a string");
             }
 
             if (!_metadata.VariantsByTag.TryGetValue(tagString.Value, out var variant))
             {
-                throw new TomlException();
+                throw new TomlException($"\"{tagString.Value}\" is not a valid value for \"{_metadata.TagKey}\"");
             }
 
             return (T)variant.Converter.ConvertFrom(table, variant.VariantType, options);

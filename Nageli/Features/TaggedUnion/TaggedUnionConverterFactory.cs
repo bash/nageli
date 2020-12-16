@@ -8,12 +8,19 @@ namespace Nageli.Features.TaggedUnion
 {
     internal sealed class TaggedUnionConverterFactory : ITomlConverterFactory
     {
+        private readonly TomlTaggedUnionOptions _taggedUnionOptions;
+
+        public TaggedUnionConverterFactory(TomlTaggedUnionOptions taggedUnionOptions)
+            => _taggedUnionOptions = taggedUnionOptions;
+
         public bool CanConvert(Type type)
             => Attribute.IsDefined(type, attributeType: typeof(TomlTaggedUnionAttribute)) && type.IsAbstract;
 
         public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
         {
             var taggedUnionAttribute = typeToConvert.GetCustomAttribute<TomlTaggedUnionAttribute>()!;
+
+            // TODO: use type name when TagAttribute is not specified.
             var variantsMetadata = typeToConvert.GetNestedTypes()
                 .Where(t => t.IsClass && !t.IsAbstract)
                 .Where(t => Attribute.IsDefined(t, typeof(TomlTagAttribute)))
@@ -21,12 +28,13 @@ namespace Nageli.Features.TaggedUnion
                 .Select(variantType => new TaggedUnionVariantMetadata(
                     VariantType: variantType,
                     Converter: options.GetConverter(variantType),
-                    Tag: variantType.GetCustomAttribute<TomlTagAttribute>()!.Value))
-                .ToImmutableDictionary(t => t.Tag);
+                    Tag: _taggedUnionOptions.TagNamingPolicy.ConvertName(
+                        variantType.GetCustomAttribute<TomlTagAttribute>()!.Value)))
+                .ToImmutableDictionary(v => v.Tag);
 
             var metadata = new TaggedUnionMetadata(
                 UnionType: typeToConvert,
-                TagKey: taggedUnionAttribute.Tag,
+                TagKey: options.PropertyNamingPolicy.ConvertName(taggedUnionAttribute.Tag),
                 VariantsByTag: variantsMetadata);
 
             return (TomlConverter)Activator.CreateInstance(

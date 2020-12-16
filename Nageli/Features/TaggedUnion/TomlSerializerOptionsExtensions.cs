@@ -5,7 +5,7 @@ namespace Nageli.Features.TaggedUnion
     public static class TomlSerializerOptionsExtensions
     {
         [Pure]
-        public static TomlSerializerOptions AddTaggedUnionConverter(this TomlSerializerOptions options)
-            => options.AddConverter(new TaggedUnionConverterFactory());
+        public static TomlSerializerOptions AddTaggedUnionConverter(this TomlSerializerOptions options, TomlTaggedUnionOptions? taggedUnionOptions = null)
+            => options.AddConverter(new TaggedUnionConverterFactory(taggedUnionOptions ?? TomlTaggedUnionOptions.Default));
     }
 }
