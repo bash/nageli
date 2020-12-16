@@ -4,7 +4,7 @@
 * [ ] Deserialization
   * [ ] Primitive types: `string`, `int`, `long`, `float`, etc.
   * [x] Tagged Unions (classes nested in abstract class)
-  * [ ] Support for `Funcky.Option`
+  * [x] Support for `Funcky.Option`
   * [ ] Support for enums
   * [ ] Deserialize objects via constructor
   * [ ] Support for immutable collections
