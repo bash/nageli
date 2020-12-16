@@ -46,14 +46,10 @@ namespace Nageli.Features.TaggedUnion
     internal sealed record TaggedUnionMetadata(
         Type UnionType,
         string TagKey,
-        IReadOnlyDictionary<string, TaggedUnionVariantMetadata> VariantsByTag)
-    {
-    }
+        IReadOnlyDictionary<string, TaggedUnionVariantMetadata> VariantsByTag);
 
     internal sealed record TaggedUnionVariantMetadata(
         Type VariantType,
         string Tag,
-        TomlConverter Converter)
-    {
-    }
+        TomlConverter Converter);
 }
