@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Nageli
+namespace Nageli.NamingPolicies
 {
     internal sealed class UpperCamelCaseNamingPolicy : ITomlNamingPolicy
     {
