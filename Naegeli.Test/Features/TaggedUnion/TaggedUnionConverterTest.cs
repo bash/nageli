@@ -96,6 +96,16 @@ namespace Naegeli.Test.Features.TaggedUnion
                 },
             };
 
+        [Fact]
+        public void NonAbstractUnionTypeCanBeDeserialized()
+        {
+            var options = TomlSerializerOptions.Default
+                .AddTaggedUnionConverter();
+            Assert.Equal(
+                new NonAbstractUnion.Variant(),
+                TomlSerializer.Deserialize<NonAbstractUnion>("Type = \"Variant\"", options));
+        }
+
         [TomlTaggedUnion(tag: "Type")]
         public abstract record EmailDelivery
         {
@@ -113,6 +123,13 @@ namespace Naegeli.Test.Features.TaggedUnion
             public sealed record SmtpServer(string Host, int Port) : EmailDelivery
             {
             }
+        }
+
+        [TomlTaggedUnion(tag: "Type")]
+        public record NonAbstractUnion
+        {
+            [TomlTag(nameof(Variant))]
+            public sealed record Variant : NonAbstractUnion;
         }
     }
 }

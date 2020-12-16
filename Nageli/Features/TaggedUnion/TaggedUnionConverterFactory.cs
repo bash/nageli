@@ -14,7 +14,7 @@ namespace Nageli.Features.TaggedUnion
             => _taggedUnionOptions = taggedUnionOptions;
 
         public bool CanConvert(Type type)
-            => Attribute.IsDefined(type, attributeType: typeof(TomlTaggedUnionAttribute)) && type.IsAbstract;
+            => Attribute.IsDefined(type, attributeType: typeof(TomlTaggedUnionAttribute));
 
         public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
         {
