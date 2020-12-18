@@ -11,10 +11,12 @@ namespace Naegeli.Test.Features.NewType
         // TODO: Add tests with valid and invalid properties
 
         [Theory]
+        [InlineData(typeof(NewTypeWithNoConstructors))]
         [InlineData(typeof(NewTypeWithNoSuitableConstructors))]
         [InlineData(typeof(NewTypeWithMoreThanOneSuitableConstructor))]
         [InlineData(typeof(NewTypeWithMoreThanOneMarkedConstructors))]
         [InlineData(typeof(NewTypeWithUnsuitableMarkedConstructor))]
+        [InlineData(typeof(ValueTypeNewTypeWithNoConstructors))]
         public void CreatingTheConverterForNewTypeWithNoSuitableConstructorThrows(Type typeToConvert)
         {
             var options = TomlSerializerOptions.Default.AddNewTypeConverter();
@@ -70,6 +72,9 @@ namespace Naegeli.Test.Features.NewType
                     new ValueTypeNewType("foo bar")
                 },
             };
+
+        [TomlNewType]
+        private sealed record NewTypeWithNoConstructors;
 
         [TomlNewType]
         private sealed class NewTypeWithNoSuitableConstructors
@@ -188,6 +193,11 @@ namespace Naegeli.Test.Features.NewType
             {
                 Value = value;
             }
+        }
+
+        [TomlNewType]
+        private readonly struct ValueTypeNewTypeWithNoConstructors
+        {
         }
     }
 }
