@@ -1,5 +1,5 @@
-
 # Naegeli
+![Build](https://github.com/bash/nageli/workflows/Build/badge.svg)
 
 ## MVP
 * [ ] Deserialization
