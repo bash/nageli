@@ -1,3 +1,4 @@
+
 # Naegeli
 
 ## MVP
@@ -10,4 +11,4 @@
   * [ ] Support for immutable collections
   * [x] Support for customizable naming policies
   * [x] Support for custom converters
-  * [ ] Support new types
+  * [x] Support new types
