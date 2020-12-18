@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.Contracts;
 
 namespace Nageli.Features.NewType
@@ -7,6 +6,6 @@ namespace Nageli.Features.NewType
     {
         [Pure]
         public static TomlSerializerOptions AddNewTypeConverter(this TomlSerializerOptions options)
-            => throw new NotImplementedException();
+            => options.AddConverter(new NewTypeConverterFactory());
     }
 }

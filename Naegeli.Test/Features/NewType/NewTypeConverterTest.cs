@@ -107,6 +107,7 @@ namespace Naegeli.Test.Features.NewType
             }
         }
 
+        [TomlNewType]
         private sealed class NewTypeWithMoreThanOneSuitableConstructor
         {
             public NewTypeWithMoreThanOneSuitableConstructor(string foo)
@@ -118,6 +119,7 @@ namespace Naegeli.Test.Features.NewType
             }
         }
 
+        [TomlNewType]
         private sealed class NewTypeWithMoreThanOneMarkedConstructors
         {
             [TomlConstructor]
@@ -131,6 +133,7 @@ namespace Naegeli.Test.Features.NewType
             }
         }
 
+        [TomlNewType]
         private sealed class NewTypeWithUnsuitableMarkedConstructor
         {
             [TomlConstructor]
