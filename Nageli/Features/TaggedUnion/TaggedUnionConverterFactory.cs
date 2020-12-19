@@ -18,7 +18,7 @@ namespace Nageli.Features.TaggedUnion
         public bool CanConvert(Type type)
             => Attribute.IsDefined(type, attributeType: typeof(TomlTaggedUnionAttribute));
 
-        public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
         {
             var variantsMetadata = GetVariants(typeToConvert)
                 .Select(variantType => CreateVariantMetadata(options, variantType))
@@ -29,7 +29,7 @@ namespace Nageli.Features.TaggedUnion
                 TagKey: GetTagKey(typeToConvert, options),
                 VariantsByTag: variantsMetadata);
 
-            return (TomlConverter)Activator.CreateInstance(
+            return (ITomlConverter)Activator.CreateInstance(
                 typeof(TaggedUnionConverter<>).MakeGenericType(typeToConvert),
                 metadata)!;
         }

@@ -9,8 +9,8 @@ namespace Nageli.Features.Option
             => type.IsGenericType &&
                type.GetGenericTypeDefinition() == typeof(Option<>);
 
-        public TomlConverter CreateConverter(Type optionType, TomlSerializerOptions options)
-            => (TomlConverter)Activator.CreateInstance(
+        public ITomlConverter CreateConverter(Type optionType, TomlSerializerOptions options)
+            => (ITomlConverter)Activator.CreateInstance(
                 typeof(OptionConverter<>).MakeGenericType(optionType.GetGenericArguments()),
                 options)!;
     }

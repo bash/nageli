@@ -2,18 +2,18 @@ using Tomlyn.Model;
 
 namespace Nageli.Features.TaggedUnion
 {
-    internal class TaggedUnionConverter<T> : TomlConverter<T>
+    internal class TaggedUnionConverter<T> : ITomlConverter<T>
     {
         private readonly TaggedUnionMetadata _metadata;
 
         public TaggedUnionConverter(TaggedUnionMetadata metadata) => _metadata = metadata;
 
-        public override T ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public T ConvertFrom(TomlObject value, TomlSerializerOptions options)
             => value is TomlTable table
                 ? ConvertFrom(table, options)
                 : throw new TomlException();
 
-        public override TomlObject ConvertTo(T value, TomlSerializerOptions options) => throw new System.NotImplementedException();
+        public TomlObject ConvertTo(T value, TomlSerializerOptions options) => throw new System.NotImplementedException();
 
         private T ConvertFrom(TomlTable table, TomlSerializerOptions options)
         {
@@ -32,7 +32,7 @@ namespace Nageli.Features.TaggedUnion
                 throw new TomlException($"\"{tagString.Value}\" is not a valid value for \"{_metadata.TagKey}\"");
             }
 
-            return (T)variant.Converter.ConvertFrom(table, variant.VariantType, options);
+            return (T)variant.Converter.ConvertFrom(table, options);
         }
     }
 }

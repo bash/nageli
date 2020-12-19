@@ -8,8 +8,8 @@ namespace Nageli.Converters
             => type.IsGenericType &&
                type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
-        public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
-            => (TomlConverter)Activator.CreateInstance(
+        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+            => (ITomlConverter)Activator.CreateInstance(
                 typeof(NullableConverter<>).MakeGenericType(typeToConvert.GetGenericArguments()),
                 options)!;
     }

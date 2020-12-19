@@ -9,8 +9,8 @@ namespace Nageli.Features.NewType
     {
         public bool CanConvert(Type type) => Attribute.IsDefined(type, typeof(TomlNewTypeAttribute));
 
-        public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
-            => (TomlConverter)Activator.CreateInstance(
+        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+            => (ITomlConverter)Activator.CreateInstance(
                 typeof(NewTypeConverter<>).MakeGenericType(typeToConvert),
                 GetMetadata(typeToConvert, options))!;
 

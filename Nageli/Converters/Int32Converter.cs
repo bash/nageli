@@ -2,9 +2,9 @@ using Tomlyn.Model;
 
 namespace Nageli.Converters
 {
-    internal sealed class Int32Converter : TomlConverter<int>
+    internal sealed class Int32Converter : ITomlConverter<int>
     {
-        public override int ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public int ConvertFrom(TomlObject value, TomlSerializerOptions options)
         {
             if (value is TomlInteger tomlInteger)
             {
@@ -15,7 +15,7 @@ namespace Nageli.Converters
             throw new TomlException();
         }
 
-        public override TomlObject ConvertTo(int value, TomlSerializerOptions options)
+        public TomlObject ConvertTo(int value, TomlSerializerOptions options)
         {
             throw new System.NotImplementedException();
         }

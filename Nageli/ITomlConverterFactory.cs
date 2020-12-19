@@ -6,6 +6,6 @@ namespace Nageli
     {
         bool CanConvert(Type type);
 
-        TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options);
+        ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options);
     }
 }

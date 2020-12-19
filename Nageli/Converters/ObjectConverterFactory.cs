@@ -9,11 +9,11 @@ namespace Nageli.Converters
     {
         public bool CanConvert(Type type) => true;
 
-        public TomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
         {
             var constructor = GetConstructorForDeserialization(typeToConvert);
             var parameterConverters = constructor.GetParameters().Select(p => GetCachedParameterInfo(p, options));
-            return (TomlConverter)Activator.CreateInstance(
+            return (ITomlConverter)Activator.CreateInstance(
                 typeof(ObjectConverter<>).MakeGenericType(typeToConvert),
                 constructor,
                 parameterConverters.ToImmutableList())!;

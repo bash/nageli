@@ -3,12 +3,12 @@ using Tomlyn.Model;
 
 namespace Nageli.Converters
 {
-    internal class GuidConverter : TomlConverter<Guid>
+    internal class GuidConverter : ITomlConverter<Guid>
     {
-        public override Guid ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public Guid ConvertFrom(TomlObject value, TomlSerializerOptions options)
             => Guid.Parse(options.GetConverter<string>().ConvertFrom(value, options));
 
-        public override TomlObject ConvertTo(Guid value, TomlSerializerOptions options)
+        public TomlObject ConvertTo(Guid value, TomlSerializerOptions options)
             => new TomlString(value.ToString());
     }
 }

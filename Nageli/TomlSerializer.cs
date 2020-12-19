@@ -16,7 +16,7 @@ namespace Nageli
         {
             var optionsOrDefault = options ?? TomlSerializerOptions.Default;
             var converter = optionsOrDefault.GetConverter(type);
-            return converter.ConvertFrom(toml, type, optionsOrDefault);
+            return converter.ConvertFrom(toml, optionsOrDefault);
         }
     }
 }

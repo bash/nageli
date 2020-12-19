@@ -9,6 +9,7 @@ using Nageli.Converters;
 namespace Nageli
 {
     // TODO: make object deserialization strategy (constructor vs properties) configurable
+    // TODO: Add a default naming policy that is used when the other policies are not specified
     public sealed record TomlSerializerOptions
     {
         public static TomlSerializerOptions Default { get; } = new(
@@ -26,7 +27,7 @@ namespace Nageli
                 new NullableConverterFactory(),
                 new ObjectConverterFactory()));
 
-        private readonly IDictionary<Type, TomlConverter> _cachedConverters = new ConcurrentDictionary<Type, TomlConverter>();
+        private readonly IDictionary<Type, ITomlConverter> _cachedConverters = new ConcurrentDictionary<Type, ITomlConverter>();
 
         public MissingValuesPolicy MissingValuesPolicy { get; }
 
@@ -57,7 +58,7 @@ namespace Nageli
             => WithConverters(ImmutableArray.Create(converterFactory).AddRange(Converters));
 
         [Pure]
-        public TomlSerializerOptions AddConverter<T>(TomlConverter<T> converter)
+        public TomlSerializerOptions AddConverter<T>(ITomlConverter<T> converter)
             where T : notnull
             => AddConverter(new GenericConverterFactory<T>(converter));
 
@@ -66,7 +67,7 @@ namespace Nageli
             => ShallowClone(converters: converters.ToImmutableList());
 
         [Pure]
-        public TomlConverter GetConverter(Type typeToConvert)
+        public ITomlConverter GetConverter(Type typeToConvert)
         {
             if (_cachedConverters.TryGetValue(typeToConvert, out var cachedConverter))
             {
@@ -80,9 +81,9 @@ namespace Nageli
         }
 
         [Pure]
-        public TomlConverter<T> GetConverter<T>()
+        public ITomlConverter<T> GetConverter<T>()
             where T : notnull
-            => (TomlConverter<T>)GetConverter(typeof(T));
+            => GetConverter(typeof(T)).AsTomlConverter<T>();
 
         private TomlSerializerOptions ShallowClone(
             MissingValuesPolicy? missingValuesPolicy = null,

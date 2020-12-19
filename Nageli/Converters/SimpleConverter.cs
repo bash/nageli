@@ -3,10 +3,10 @@ using Tomlyn.Model;
 
 namespace Nageli.Converters
 {
-    internal sealed class SimpleConverter<T> : TomlConverter<T>
+    internal sealed class SimpleConverter<T> : ITomlConverter<T>
         where T : IEquatable<T>
     {
-        public override T ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public T ConvertFrom(TomlObject value, TomlSerializerOptions options)
         {
             if (value is TomlValue<T> tomlValue)
             {
@@ -16,8 +16,8 @@ namespace Nageli.Converters
             throw new TomlException();
         }
 
-        public override TomlObject ConvertTo(T value, TomlSerializerOptions options) => ToTomlObject(value);
-        
+        public TomlObject ConvertTo(T value, TomlSerializerOptions options) => ToTomlObject(value);
+
         /// Adapted from:
         /// https://github.com/xoofx/Tomlyn/blob/8f997483d3df29ee0ae217d75bad851ebc2ec0aa/src/Tomlyn/Model/TomlObject.cs
         internal static TomlObject ToTomlObject(object value)

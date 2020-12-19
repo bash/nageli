@@ -3,18 +3,15 @@ using Tomlyn.Model;
 
 namespace Nageli
 {
-    public abstract class TomlConverter<T> : TomlConverter
+    public interface ITomlConverter<T> : ITomlConverter
     {
-        public override object ConvertFrom(TomlObject value, Type typeToConvert, TomlSerializerOptions options)
-            => ConvertFrom(value, options)!;
+        object ITomlConverter.ConvertFrom(TomlObject value, TomlSerializerOptions options) => ConvertFrom(value, options)!;
 
-        public override object ConvertFromAbsent(Type typeToConvert, TomlSerializerOptions options)
-            => ConvertFromAbsent(options)!;
+        object ITomlConverter.ConvertFromAbsent(TomlSerializerOptions options) => ConvertFromAbsent(options)!;
 
-        public override TomlObject ConvertTo(object value, TomlSerializerOptions options)
-            => ConvertTo((T)value, options);
+        TomlObject ITomlConverter.ConvertTo(object value, TomlSerializerOptions options) => ConvertTo((T)value, options);
 
-        public virtual T ConvertFromAbsent(TomlSerializerOptions options)
+        new T ConvertFromAbsent(TomlSerializerOptions options)
             => options.MissingValuesPolicy switch
             {
                 MissingValuesPolicy.Disallow => throw new TomlException(),
@@ -22,8 +19,8 @@ namespace Nageli
                 _ => throw new NotSupportedException(),
             };
 
-        public abstract T ConvertFrom(TomlObject value, TomlSerializerOptions options);
+        new T ConvertFrom(TomlObject value, TomlSerializerOptions options);
 
-        public abstract TomlObject ConvertTo(T value, TomlSerializerOptions options);
+        TomlObject ConvertTo(T value, TomlSerializerOptions options);
     }
 }

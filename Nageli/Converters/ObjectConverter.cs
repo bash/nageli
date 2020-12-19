@@ -6,7 +6,7 @@ using Tomlyn.Model;
 
 namespace Nageli.Converters
 {
-    internal sealed class ObjectConverter<T> : TomlConverter<T>
+    internal sealed class ObjectConverter<T> : ITomlConverter<T>
         where T : notnull
     {
         private readonly ConstructorInfo _constructor;
@@ -18,7 +18,7 @@ namespace Nageli.Converters
             _parameterConverters = parameterConverters;
         }
 
-        public override T ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public T ConvertFrom(TomlObject value, TomlSerializerOptions options)
         {
             if (value is TomlTable tomlTable)
             {
@@ -28,7 +28,7 @@ namespace Nageli.Converters
             throw new TomlException("Objects can only be converted from tables");
         }
 
-        public override TomlObject ConvertTo(T value, TomlSerializerOptions options) => throw new NotImplementedException();
+        public TomlObject ConvertTo(T value, TomlSerializerOptions options) => throw new NotImplementedException();
 
         private T ConvertFrom(TomlTable table, TomlSerializerOptions options)
         {
@@ -39,14 +39,13 @@ namespace Nageli.Converters
         private static object ConvertParameter(TomlTable table, CachedParameterInfo parameter, TomlSerializerOptions options)
         {
             var parameterName = parameter.Info.Name ?? throw new TomlException("Constructor parameter without name");
-            var parameterType = parameter.Info.ParameterType;
             var propertyName = options.PropertyNamingPolicy.ConvertName(parameterName);
 
             // TODO: support nullable reference types
 
             return table.TryGetToml(propertyName, out var tomlObject)
-                ? parameter.Converter.ConvertFrom(tomlObject, parameterType, options)
-                : parameter.Converter.ConvertFromAbsent(parameterType, options);
+                ? parameter.Converter.ConvertFrom(tomlObject, options)
+                : parameter.Converter.ConvertFromAbsent(options);
         }
     }
 }

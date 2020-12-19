@@ -4,12 +4,12 @@ using Tomlyn.Model;
 
 namespace Nageli.Converters
 {
-    internal sealed class DictionaryConverter<TValue, TDictionary> : TomlConverter<TDictionary>
+    internal sealed class DictionaryConverter<TValue, TDictionary> : ITomlConverter<TDictionary>
         where TValue : notnull
         where TDictionary : IDictionary<string, TValue>
     {
         private readonly Type _instanceType;
-        private readonly TomlConverter<TValue> _valueConverter;
+        private readonly ITomlConverter<TValue> _valueConverter;
 
         public DictionaryConverter(Type instanceType, TomlSerializerOptions options)
         {
@@ -17,12 +17,12 @@ namespace Nageli.Converters
             _instanceType = instanceType;
         }
 
-        public override TDictionary ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public TDictionary ConvertFrom(TomlObject value, TomlSerializerOptions options)
             => value is TomlTable tomlTable
                 ? ConvertFrom(tomlTable, options)
                 : throw new TomlException();
 
-        public override TomlObject ConvertTo(TDictionary value, TomlSerializerOptions options) => throw new NotImplementedException();
+        public TomlObject ConvertTo(TDictionary value, TomlSerializerOptions options) => throw new NotImplementedException();
 
         private TDictionary ConvertFrom(TomlTable table, TomlSerializerOptions options)
         {
