@@ -10,5 +10,7 @@ namespace Nageli
         object ConvertFromAbsent(TomlSerializerOptions options);
 
         TomlObject ConvertTo(object value, TomlSerializerOptions options);
+
+        internal void DisallowDirectImplementations();
     }
 }
