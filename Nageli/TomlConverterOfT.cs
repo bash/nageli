@@ -8,10 +8,10 @@ namespace Nageli
         new T ConvertFrom(TomlObject value, TomlSerializerOptions options);
 
         new T ConvertFromAbsent(TomlSerializerOptions options)
-            => options.MissingValuesPolicy switch
+            => options.AbsentValuesPolicy switch
             {
-                MissingValuesPolicy.Disallow => throw new TomlException(),
-                MissingValuesPolicy.UseDefault => default!,
+                AbsentValuesPolicy.Disallow => throw new TomlException(),
+                AbsentValuesPolicy.UseDefault => default!,
                 _ => throw new NotSupportedException(),
             };
 

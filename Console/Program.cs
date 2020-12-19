@@ -10,7 +10,7 @@ internal static class Program
     {
         var options = TomlSerializerOptions.Default
             .WithPropertyNamingPolicy(TomlNamingPolicy.SnakeCase)
-            .WithMissingValuesPolicy(MissingValuesPolicy.Disallow)
+            .WithAbsentValuesPolicy(AbsentValuesPolicy.Disallow)
             .AddTaggedUnionConverter(TomlTaggedUnionOptions.Default.WithTagNamingPolicy(TomlNamingPolicy.SnakeCase))
             .AddOptionConverter();
 

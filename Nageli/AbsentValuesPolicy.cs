@@ -1,6 +1,6 @@
 namespace Nageli
 {
-    public enum MissingValuesPolicy
+    public enum AbsentValuesPolicy
     {
         /// <summary>
         /// Uses the default value for the type (<c>null</c> for reference types).

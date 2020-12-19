@@ -14,7 +14,7 @@ namespace Nageli
     {
         public static TomlSerializerOptions Default { get; } = new(
             propertyNamingPolicy: TomlNamingPolicy.Default,
-            missingValuesPolicy: MissingValuesPolicy.UseDefault,
+            absentValuesPolicy: AbsentValuesPolicy.UseDefault,
             converters: ImmutableArray.Create<ITomlConverterFactory>(
                 new GenericConverterFactory<string>(new SimpleConverter<string>()),
                 new GenericConverterFactory<long>(new SimpleConverter<long>()),
@@ -29,25 +29,25 @@ namespace Nageli
 
         private readonly IDictionary<Type, ITomlConverter> _cachedConverters = new ConcurrentDictionary<Type, ITomlConverter>();
 
-        public MissingValuesPolicy MissingValuesPolicy { get; }
+        public AbsentValuesPolicy AbsentValuesPolicy { get; }
 
         public ITomlNamingPolicy PropertyNamingPolicy { get; }
 
         public IImmutableList<ITomlConverterFactory> Converters { get; }
 
         private TomlSerializerOptions(
-            MissingValuesPolicy missingValuesPolicy,
+            AbsentValuesPolicy absentValuesPolicy,
             ITomlNamingPolicy propertyNamingPolicy,
             IImmutableList<ITomlConverterFactory> converters)
         {
-            MissingValuesPolicy = missingValuesPolicy;
+            AbsentValuesPolicy = absentValuesPolicy;
             PropertyNamingPolicy = propertyNamingPolicy;
             Converters = converters;
         }
 
         [Pure]
-        public TomlSerializerOptions WithMissingValuesPolicy(MissingValuesPolicy missingValuesPolicy)
-            => ShallowClone(missingValuesPolicy: missingValuesPolicy);
+        public TomlSerializerOptions WithAbsentValuesPolicy(AbsentValuesPolicy absentValuesPolicy)
+            => ShallowClone(absentValuesPolicy: absentValuesPolicy);
 
         [Pure]
         public TomlSerializerOptions WithPropertyNamingPolicy(ITomlNamingPolicy namingPolicy)
@@ -86,11 +86,11 @@ namespace Nageli
             => GetConverter(typeof(T)).AsTomlConverter<T>();
 
         private TomlSerializerOptions ShallowClone(
-            MissingValuesPolicy? missingValuesPolicy = null,
+            AbsentValuesPolicy? absentValuesPolicy = null,
             ITomlNamingPolicy? propertyNamingPolicy = null,
             IImmutableList<ITomlConverterFactory>? converters = null)
             => new(
-                missingValuesPolicy: missingValuesPolicy ?? MissingValuesPolicy,
+                absentValuesPolicy: absentValuesPolicy ?? AbsentValuesPolicy,
                 propertyNamingPolicy: propertyNamingPolicy ?? PropertyNamingPolicy,
                 converters: converters ?? Converters);
     }
