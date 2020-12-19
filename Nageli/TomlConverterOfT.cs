@@ -5,6 +5,8 @@ namespace Nageli
 {
     public interface ITomlConverter<T> : ITomlConverter
     {
+        new T ConvertFrom(TomlObject value, TomlSerializerOptions options);
+
         new T ConvertFromAbsent(TomlSerializerOptions options)
             => options.MissingValuesPolicy switch
             {
@@ -12,8 +14,6 @@ namespace Nageli
                 MissingValuesPolicy.UseDefault => default!,
                 _ => throw new NotSupportedException(),
             };
-
-        new T ConvertFrom(TomlObject value, TomlSerializerOptions options);
 
         TomlObject ConvertTo(T value, TomlSerializerOptions options);
 
