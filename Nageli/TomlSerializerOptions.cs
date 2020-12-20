@@ -20,7 +20,20 @@ namespace Nageli
             defaultImplementations: ImmutableArray<IDefaultImplementationProvider>.Empty,
             converters: ImmutableArray<ITomlConverterFactory>.Empty);
 
-        public static TomlSerializerOptions Default { get; } = Minimal.AddDefaultConverters();
+        public static TomlSerializerOptions Default { get; }
+            = Minimal
+                .AddConverters(ImmutableArray.Create<ITomlConverterFactory>(
+                    new GenericConverterFactory<string>(new SimpleConverter<string>()),
+                    new GenericConverterFactory<long>(new SimpleConverter<long>()),
+                    new GenericConverterFactory<bool>(new SimpleConverter<bool>()),
+                    new GenericConverterFactory<double>(new SimpleConverter<double>()),
+                    new GenericConverterFactory<int>(new Int32Converter()),
+                    new GenericConverterFactory<DateTime>(new SimpleConverter<DateTime>()),
+                    new GenericConverterFactory<Guid>(new GuidConverter()),
+                    new DictionaryConverterFactory(),
+                    new NullableConverterFactory(),
+                    new CollectionConverterFactory(),
+                    new ObjectConverterFactory()));
 
         private readonly IDictionary<Type, ITomlConverter> _cachedConverters = new ConcurrentDictionary<Type, ITomlConverter>();
 
@@ -45,21 +58,6 @@ namespace Nageli
             Converters = converters;
             DefaultImplementations = defaultImplementations;
         }
-
-        [Pure]
-        public TomlSerializerOptions AddDefaultConverters()
-            => AddConverters(ImmutableArray.Create<ITomlConverterFactory>(
-                new GenericConverterFactory<string>(new SimpleConverter<string>()),
-                new GenericConverterFactory<long>(new SimpleConverter<long>()),
-                new GenericConverterFactory<bool>(new SimpleConverter<bool>()),
-                new GenericConverterFactory<double>(new SimpleConverter<double>()),
-                new GenericConverterFactory<int>(new Int32Converter()),
-                new GenericConverterFactory<DateTime>(new SimpleConverter<DateTime>()),
-                new GenericConverterFactory<Guid>(new GuidConverter()),
-                new DictionaryConverterFactory(),
-                new NullableConverterFactory(),
-                new CollectionConverterFactory(),
-                new ObjectConverterFactory()));
 
         [Pure]
         public TomlSerializerOptions WithAbsentValuesPolicy(AbsentValuesPolicy absentValuesPolicy)
