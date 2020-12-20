@@ -45,6 +45,7 @@ namespace Nageli
                 .AddOpenGenericDefaultImplementation(typeof(IImmutableSet<>), typeof(ImmutableHashSet<>).MakeGenericType)
                 .AddOpenGenericDefaultImplementation(typeof(IImmutableStack<>), typeof(ImmutableStack<>).MakeGenericType);
 
+        /// <summary>Decides how absent keys are treated. See <see cref="TomlAbsentValuesPolicy"/> for some implementations.</summary>
         public ITomlAbsentValuesPolicy AbsentValuesPolicy { get; }
 
         public ITomlNamingPolicy PropertyNamingPolicy { get; }
@@ -65,6 +66,7 @@ namespace Nageli
             DefaultImplementations = defaultImplementations;
         }
 
+        /// <summary>Decides how absent keys are treated. See <see cref="TomlAbsentValuesPolicy"/> for some implementations.</summary>
         [Pure]
         public TomlSerializerOptions WithAbsentValuesPolicy(ITomlAbsentValuesPolicy absentValuesPolicy)
             => ShallowClone(absentValuesPolicy: absentValuesPolicy);
