@@ -40,7 +40,7 @@ namespace Nageli.Converters
         private static object ConvertParameter(TomlTable table, CachedParameterInfo parameter, ITomlSerializerContext context)
         {
             var parameterName = parameter.Info.Name ?? throw new TomlException("Constructor parameter without name");
-            var propertyName = context.Options.PropertyNamingPolicy.ConvertName(parameterName);
+            var propertyName = context.ConvertPropertyName(parameterName);
 
             // TODO: support nullable reference types
 

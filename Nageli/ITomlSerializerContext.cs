@@ -9,5 +9,7 @@ namespace Nageli
         ITomlConverter GetConverter(Type typeToConvert);
 
         Type? GetDefaultImplementation(Type typeToConvert);
+
+        string ConvertPropertyName(string propertyName);
     }
 }

@@ -53,7 +53,7 @@ namespace Nageli.Features.TaggedUnion
         {
             var taggedUnionAttribute = typeToConvert.GetCustomAttribute<TomlTaggedUnionAttribute>()!;
             var tagKey = taggedUnionAttribute.Tag ?? DefaultTagKey;
-            return context.Options.PropertyNamingPolicy.ConvertName(tagKey);
+            return context.ConvertPropertyName(tagKey);
         }
     }
 }

@@ -20,6 +20,9 @@ namespace Nageli
         public Type? GetDefaultImplementation(Type typeToConvert)
             => _cachedDefaultImplementations.GetOrAdd(typeToConvert, GetImplementationUncached);
 
+        public string ConvertPropertyName(string propertyName)
+            => Options.PropertyNamingPolicy.ConvertName(propertyName);
+
         private ITomlConverter GetConverterUncached(Type typeToConvert)
         {
             var factory = Options.Converters.FirstOrDefault(c => c.CanConvert(typeToConvert))
