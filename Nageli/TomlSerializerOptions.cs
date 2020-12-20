@@ -42,9 +42,9 @@ namespace Nageli
                 .AddOpenGenericDefaultImplementation(typeof(ISet<>), typeof(HashSet<>).MakeGenericType)
                 .AddOpenGenericDefaultImplementation(typeof(IReadOnlySet<>), typeof(HashSet<>).MakeGenericType)
                 .AddOpenGenericDefaultImplementation(typeof(IImmutableList<>), typeof(ImmutableList<>).MakeGenericType)
-                .AddOpenGenericDefaultImplementation(typeof(IImmutableQueue<>), typeof(ImmutableList<>).MakeGenericType)
-                .AddOpenGenericDefaultImplementation(typeof(IImmutableSet<>), typeof(ImmutableList<>).MakeGenericType)
-                .AddOpenGenericDefaultImplementation(typeof(IImmutableStack<>), typeof(ImmutableList<>).MakeGenericType);
+                .AddOpenGenericDefaultImplementation(typeof(IImmutableQueue<>), typeof(ImmutableQueue<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IImmutableSet<>), typeof(ImmutableHashSet<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IImmutableStack<>), typeof(ImmutableStack<>).MakeGenericType);
 
         private readonly IDictionary<Type, ITomlConverter> _cachedConverters = new ConcurrentDictionary<Type, ITomlConverter>();
 
