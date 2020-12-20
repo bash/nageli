@@ -6,6 +6,9 @@
         <WarningsAsErrors>$(WarningsAsErrors);nullable</WarningsAsErrors>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Tomlyn" Version="0.1.2" />
+        <PackageReference Include="Tomlyn" Version="0.1.2" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="Naegeli.Test" />
     </ItemGroup>
 </Project>

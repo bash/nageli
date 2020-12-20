@@ -117,18 +117,6 @@ namespace Nageli
         public TomlSerializerOptions AddOpenGenericDefaultImplementation(Type abstractType, Func<Type[], Type> createImplementation)
             => AddDefaultImplementation(new OpenGenericDefaultImplementationProvider(abstractType, createImplementation));
 
-        [Pure]
-        public ITomlConverter GetConverter(Type typeToConvert)
-            => new TomlSerializerContext(this).GetConverter(typeToConvert);
-
-        [Pure]
-        public Type? GetDefaultImplementation(Type typeToConvert)
-            => new TomlSerializerContext(this).GetDefaultImplementation(typeToConvert);
-
-        [Pure]
-        public ITomlConverter<T> GetConverter<T>()
-            => GetConverter(typeof(T)).AsTomlConverter<T>();
-
         private TomlSerializerOptions ShallowClone(
             AbsentValuesPolicy? absentValuesPolicy = null,
             ITomlNamingPolicy? propertyNamingPolicy = null,
