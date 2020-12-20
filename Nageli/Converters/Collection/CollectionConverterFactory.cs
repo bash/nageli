@@ -10,7 +10,8 @@ namespace Nageli.Converters.Collection
         private static readonly IImmutableList<ICollectionCreatorFactory> CollectionCreatorFactories
             = ImmutableArray.Create<ICollectionCreatorFactory>(
                 new ConstructorBasedCollectionCreatorFactory(),
-                new EmptyConstructorAddCollectionCreatorFactory());
+                new EmptyConstructorAddCollectionCreatorFactory(),
+                new ImmutableCollectionCreatorFactory());
 
         public bool CanConvert(Type type) => IsIEnumerable(type) || type.GetInterfaces().Any(IsIEnumerable);
 
