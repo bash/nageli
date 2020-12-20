@@ -8,13 +8,13 @@ namespace Nageli.Converters
     {
         private readonly ITomlConverter<T> _valueConverter;
 
-        public NullableConverter(TomlSerializerOptions options) => _valueConverter = options.GetConverter<T>();
+        public NullableConverter(ITomlSerializerContext context) => _valueConverter = context.GetConverter<T>();
 
-        public T? ConvertFrom(TomlObject value, TomlSerializerOptions options) => _valueConverter.ConvertFrom(value, options);
+        public T? ConvertFrom(TomlObject value, ITomlSerializerContext context) => _valueConverter.ConvertFrom(value, context);
 
-        public T? ConvertFromAbsent(TomlSerializerOptions options) => null;
+        public T? ConvertFromAbsent(ITomlSerializerContext context) => null;
 
-        public TomlObject ConvertTo(T? value, TomlSerializerOptions options)
+        public TomlObject ConvertTo(T? value, ITomlSerializerContext context)
             => throw new NotImplementedException();
     }
 }

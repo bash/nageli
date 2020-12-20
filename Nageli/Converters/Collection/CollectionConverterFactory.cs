@@ -15,13 +15,13 @@ namespace Nageli.Converters.Collection
 
         public bool CanConvert(Type type) => IsIEnumerable(type) || type.GetInterfaces().Any(IsIEnumerable);
 
-        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+        public ITomlConverter CreateConverter(Type typeToConvert, ITomlSerializerContext context)
         {
             var itemType = IsIEnumerable(typeToConvert)
                 ? typeToConvert.GetGenericArguments()[0]
                 : typeToConvert.GetInterfaces().Single(IsIEnumerable).GetGenericArguments()[0];
 
-            var typeToCreate = options.GetDefaultImplementation(typeToConvert) ?? typeToConvert;
+            var typeToCreate = context.GetDefaultImplementation(typeToConvert) ?? typeToConvert;
 
             var factory = CollectionCreatorFactories.FirstOrDefault(f => f.CanCreate(typeToCreate, itemType))
                 ?? throw new TomlException($"No creator found for collection {typeToCreate}");
@@ -29,7 +29,7 @@ namespace Nageli.Converters.Collection
             return (ITomlConverter)Activator.CreateInstance(
                 typeof(CollectionConverter<,>).MakeGenericType(typeToConvert, itemType),
                 factory.CreateCollectionCreator(typeToCreate, itemType),
-                options)!;
+                context)!;
         }
 
         private static bool IsIEnumerable(Type type)

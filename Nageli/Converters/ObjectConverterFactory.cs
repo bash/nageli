@@ -9,20 +9,20 @@ namespace Nageli.Converters
     {
         public bool CanConvert(Type type) => true;
 
-        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+        public ITomlConverter CreateConverter(Type typeToConvert, ITomlSerializerContext context)
         {
-            var typeToCreate = options.GetDefaultImplementation(typeToConvert) ?? typeToConvert;
+            var typeToCreate = context.GetDefaultImplementation(typeToConvert) ?? typeToConvert;
             var constructor = GetConstructorForDeserialization(typeToCreate);
-            var parameterConverters = constructor.GetParameters().Select(p => GetCachedParameterInfo(p, options));
+            var parameterConverters = constructor.GetParameters().Select(p => GetCachedParameterInfo(p, context));
             return (ITomlConverter)Activator.CreateInstance(
                 typeof(ObjectConverter<>).MakeGenericType(typeToConvert),
                 constructor,
                 parameterConverters.ToImmutableList())!;
         }
 
-        private static CachedParameterInfo GetCachedParameterInfo(ParameterInfo info, TomlSerializerOptions options)
+        private static CachedParameterInfo GetCachedParameterInfo(ParameterInfo info, ITomlSerializerContext context)
         {
-            var converter = options.GetConverter(info.ParameterType);
+            var converter = context.GetConverter(info.ParameterType);
             return new CachedParameterInfo(info, converter);
         }
 

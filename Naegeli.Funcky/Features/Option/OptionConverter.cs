@@ -8,12 +8,12 @@ namespace Nageli.Features.Option
     {
         private readonly ITomlConverter<TItem> _itemConverter;
 
-        public OptionConverter(TomlSerializerOptions options) => _itemConverter = options.GetConverter<TItem>();
+        public OptionConverter(ITomlSerializerContext context) => _itemConverter = context.GetConverter<TItem>();
 
-        public Option<TItem> ConvertFrom(TomlObject value, TomlSerializerOptions options) => _itemConverter.ConvertFrom(value, options);
+        public Option<TItem> ConvertFrom(TomlObject value, ITomlSerializerContext context) => _itemConverter.ConvertFrom(value, context);
 
-        public Option<TItem> ConvertFromAbsent(TomlSerializerOptions options) => Option<TItem>.None();
+        public Option<TItem> ConvertFromAbsent(ITomlSerializerContext context) => Option<TItem>.None();
 
-        public TomlObject ConvertTo(Option<TItem> value, TomlSerializerOptions options) => throw new System.NotImplementedException();
+        public TomlObject ConvertTo(Option<TItem> value, ITomlSerializerContext context) => throw new System.NotImplementedException();
     }
 }

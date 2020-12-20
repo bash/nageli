@@ -8,14 +8,14 @@ namespace Nageli.Features.TaggedUnion
 
         public TaggedUnionConverter(TaggedUnionMetadata metadata) => _metadata = metadata;
 
-        public T ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public T ConvertFrom(TomlObject value, ITomlSerializerContext context)
             => value is TomlTable table
-                ? ConvertFrom(table, options)
+                ? ConvertFrom(table, context)
                 : throw new TomlException();
 
-        public TomlObject ConvertTo(T value, TomlSerializerOptions options) => throw new System.NotImplementedException();
+        public TomlObject ConvertTo(T value, ITomlSerializerContext context) => throw new System.NotImplementedException();
 
-        private T ConvertFrom(TomlTable table, TomlSerializerOptions options)
+        private T ConvertFrom(TomlTable table, ITomlSerializerContext context)
         {
             if (!table.TryGetToml(_metadata.TagKey, out var tag))
             {
@@ -32,7 +32,7 @@ namespace Nageli.Features.TaggedUnion
                 throw new TomlException($"\"{tagString.Value}\" is not a valid value for \"{_metadata.TagKey}\"");
             }
 
-            return (T)variant.Converter.ConvertFrom(table, options);
+            return (T)variant.Converter.ConvertFrom(table, context);
         }
     }
 }

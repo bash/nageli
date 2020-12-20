@@ -9,16 +9,16 @@ namespace Nageli.Features.NewType
     {
         public bool CanConvert(Type type) => Attribute.IsDefined(type, typeof(TomlNewTypeAttribute));
 
-        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+        public ITomlConverter CreateConverter(Type typeToConvert, ITomlSerializerContext context)
             => (ITomlConverter)Activator.CreateInstance(
                 typeof(NewTypeConverter<>).MakeGenericType(typeToConvert),
-                GetMetadata(typeToConvert, options))!;
+                GetMetadata(typeToConvert, context))!;
 
-        private static NewTypeMetadata GetMetadata(Type typeToConvert, TomlSerializerOptions options)
+        private static NewTypeMetadata GetMetadata(Type typeToConvert, ITomlSerializerContext context)
         {
             var constructor = FindConstructor(typeToConvert);
             var innerType = constructor.GetParameters()[0].ParameterType;
-            var converter = options.GetConverter(innerType);
+            var converter = context.GetConverter(innerType);
             return new NewTypeMetadata(innerType, converter, constructor, null!);
         }
 

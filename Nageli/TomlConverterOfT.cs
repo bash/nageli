@@ -5,23 +5,24 @@ namespace Nageli
 {
     public interface ITomlConverter<T> : ITomlConverter
     {
-        new T ConvertFrom(TomlObject value, TomlSerializerOptions options);
+        new T ConvertFrom(TomlObject value, ITomlSerializerContext context);
 
-        new T ConvertFromAbsent(TomlSerializerOptions options)
-            => options.AbsentValuesPolicy switch
+        // TODO: move this implementation to ITomlSerializerContext
+        new T ConvertFromAbsent(ITomlSerializerContext context)
+            => context.Options.AbsentValuesPolicy switch
             {
                 AbsentValuesPolicy.Disallow => throw new TomlException(),
                 AbsentValuesPolicy.UseDefault => default!,
                 _ => throw new NotSupportedException(),
             };
 
-        TomlObject ConvertTo(T value, TomlSerializerOptions options);
+        TomlObject ConvertTo(T value, ITomlSerializerContext context);
 
-        object ITomlConverter.ConvertFrom(TomlObject value, TomlSerializerOptions options) => ConvertFrom(value, options)!;
+        object ITomlConverter.ConvertFrom(TomlObject value, ITomlSerializerContext context) => ConvertFrom(value, context)!;
 
-        object ITomlConverter.ConvertFromAbsent(TomlSerializerOptions options) => ConvertFromAbsent(options)!;
+        object ITomlConverter.ConvertFromAbsent(ITomlSerializerContext context) => ConvertFromAbsent(context)!;
 
-        TomlObject ITomlConverter.ConvertTo(object value, TomlSerializerOptions options) => ConvertTo((T)value, options);
+        TomlObject ITomlConverter.ConvertTo(object value, ITomlSerializerContext context) => ConvertTo((T)value, context);
 
         void ITomlConverter.DisallowDirectImplementations()
         {

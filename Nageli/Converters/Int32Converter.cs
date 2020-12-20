@@ -4,7 +4,7 @@ namespace Nageli.Converters
 {
     internal sealed class Int32Converter : ITomlConverter<int>
     {
-        public int ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public int ConvertFrom(TomlObject value, ITomlSerializerContext context)
         {
             if (value is TomlInteger tomlInteger)
             {
@@ -15,7 +15,7 @@ namespace Nageli.Converters
             throw new TomlException();
         }
 
-        public TomlObject ConvertTo(int value, TomlSerializerOptions options)
+        public TomlObject ConvertTo(int value, ITomlSerializerContext context)
         {
             throw new System.NotImplementedException();
         }

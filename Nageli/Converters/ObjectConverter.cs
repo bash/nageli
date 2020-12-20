@@ -19,34 +19,34 @@ namespace Nageli.Converters
             _parameterConverters = parameterConverters;
         }
 
-        public T ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public T ConvertFrom(TomlObject value, ITomlSerializerContext context)
         {
             if (value is TomlTable tomlTable)
             {
-                return ConvertFrom(tomlTable, options);
+                return ConvertFrom(tomlTable, context);
             }
 
             throw new TomlException("Objects can only be converted from tables");
         }
 
-        public TomlObject ConvertTo(T value, TomlSerializerOptions options) => throw new NotImplementedException();
+        public TomlObject ConvertTo(T value, ITomlSerializerContext context) => throw new NotImplementedException();
 
-        private T ConvertFrom(TomlTable table, TomlSerializerOptions options)
+        private T ConvertFrom(TomlTable table, ITomlSerializerContext context)
         {
-            var parameters = _parameterConverters.Select(p => ConvertParameter(table, p, options)).ToArray();
+            var parameters = _parameterConverters.Select(p => ConvertParameter(table, p, context)).ToArray();
             return (T)_constructor.Invoke(parameters);
         }
 
-        private static object ConvertParameter(TomlTable table, CachedParameterInfo parameter, TomlSerializerOptions options)
+        private static object ConvertParameter(TomlTable table, CachedParameterInfo parameter, ITomlSerializerContext context)
         {
             var parameterName = parameter.Info.Name ?? throw new TomlException("Constructor parameter without name");
-            var propertyName = options.PropertyNamingPolicy.ConvertName(parameterName);
+            var propertyName = context.Options.PropertyNamingPolicy.ConvertName(parameterName);
 
             // TODO: support nullable reference types
 
             return table.TryGetToml(propertyName, out var tomlObject)
-                ? parameter.Converter.ConvertFrom(tomlObject, options)
-                : parameter.Converter.ConvertFromAbsent(options);
+                ? parameter.Converter.ConvertFrom(tomlObject, context)
+                : parameter.Converter.ConvertFromAbsent(context);
         }
     }
 }

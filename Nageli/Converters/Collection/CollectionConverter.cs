@@ -12,16 +12,16 @@ namespace Nageli.Converters.Collection
 
         public CollectionConverter(
             CollectionCreator createCollection,
-            TomlSerializerOptions options)
+            ITomlSerializerContext context)
         {
             _createCollection = createCollection;
-            _itemConverter = options.GetConverter<TItem>();
+            _itemConverter = context.GetConverter<TItem>();
         }
 
-        public TCollection ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public TCollection ConvertFrom(TomlObject value, ITomlSerializerContext context)
         {
             TCollection CreateCollection(IEnumerable<TomlObject> values)
-                => (TCollection)_createCollection(values.Select(v => _itemConverter.ConvertFrom(v, options)));
+                => (TCollection)_createCollection(values.Select(v => _itemConverter.ConvertFrom(v, context)));
 
             return value switch
             {
@@ -31,9 +31,9 @@ namespace Nageli.Converters.Collection
             };
         }
 
-        public object ConvertFromAbsent(TomlSerializerOptions options)
+        public object ConvertFromAbsent(ITomlSerializerContext context)
             => _createCollection(Enumerable.Empty<TItem>());
 
-        public TomlObject ConvertTo(TCollection value, TomlSerializerOptions options) => throw new NotImplementedException();
+        public TomlObject ConvertTo(TCollection value, ITomlSerializerContext context) => throw new NotImplementedException();
     }
 }

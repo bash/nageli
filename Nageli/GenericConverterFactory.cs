@@ -10,6 +10,6 @@ namespace Nageli
 
         public bool CanConvert(Type type) => type == typeof(T);
 
-        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options) => _converter;
+        public ITomlConverter CreateConverter(Type typeToConvert, ITomlSerializerContext context) => _converter;
     }
 }

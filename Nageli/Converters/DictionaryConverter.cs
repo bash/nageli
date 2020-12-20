@@ -11,27 +11,27 @@ namespace Nageli.Converters
         private readonly Type _instanceType;
         private readonly ITomlConverter<TValue> _valueConverter;
 
-        public DictionaryConverter(Type instanceType, TomlSerializerOptions options)
+        public DictionaryConverter(Type instanceType, ITomlSerializerContext context)
         {
-            _valueConverter = options.GetConverter<TValue>();
+            _valueConverter = context.GetConverter<TValue>();
             _instanceType = instanceType;
         }
 
-        public TDictionary ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public TDictionary ConvertFrom(TomlObject value, ITomlSerializerContext context)
             => value is TomlTable tomlTable
-                ? ConvertFrom(tomlTable, options)
+                ? ConvertFrom(tomlTable, context)
                 : throw new TomlException();
 
-        public TomlObject ConvertTo(TDictionary value, TomlSerializerOptions options) => throw new NotImplementedException();
+        public TomlObject ConvertTo(TDictionary value, ITomlSerializerContext context) => throw new NotImplementedException();
 
-        private TDictionary ConvertFrom(TomlTable table, TomlSerializerOptions options)
+        private TDictionary ConvertFrom(TomlTable table, ITomlSerializerContext context)
         {
             var dictionary = (TDictionary)Activator.CreateInstance(_instanceType)!;
 
             foreach (var key in table.Keys)
             {
                 var value = table.TryGetToml(key, out var dictionaryValue)
-                    ? _valueConverter.ConvertFrom(dictionaryValue, options)
+                    ? _valueConverter.ConvertFrom(dictionaryValue, context)
                     : throw new InvalidOperationException("This should never happen");
                 dictionary[key] = value;
             }

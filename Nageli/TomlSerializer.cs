@@ -15,8 +15,9 @@ namespace Nageli
         public static object Deserialize(TomlObject toml, Type type, TomlSerializerOptions? options = null)
         {
             var optionsOrDefault = options ?? TomlSerializerOptions.Default;
-            var converter = optionsOrDefault.GetConverter(type);
-            return converter.ConvertFrom(toml, optionsOrDefault);
+            var context = new TomlSerializerContext(optionsOrDefault);
+            var converter = context.GetConverter(type);
+            return converter.ConvertFrom(toml, context);
         }
     }
 }

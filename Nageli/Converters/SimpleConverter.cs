@@ -6,7 +6,7 @@ namespace Nageli.Converters
     internal sealed class SimpleConverter<T> : ITomlConverter<T>
         where T : IEquatable<T>
     {
-        public T ConvertFrom(TomlObject value, TomlSerializerOptions options)
+        public T ConvertFrom(TomlObject value, ITomlSerializerContext context)
         {
             if (value is TomlValue<T> tomlValue)
             {
@@ -16,7 +16,7 @@ namespace Nageli.Converters
             throw new TomlException();
         }
 
-        public TomlObject ConvertTo(T value, TomlSerializerOptions options) => ToTomlObject(value);
+        public TomlObject ConvertTo(T value, ITomlSerializerContext context) => ToTomlObject(value);
 
         /// Adapted from:
         /// https://github.com/xoofx/Tomlyn/blob/8f997483d3df29ee0ae217d75bad851ebc2ec0aa/src/Tomlyn/Model/TomlObject.cs

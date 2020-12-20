@@ -5,11 +5,11 @@ namespace Nageli
     /// <remarks>Do not implement this interface directly. Implement <see cref="ITomlConverter{T}"/> instead.</remarks>
     public interface ITomlConverter
     {
-        object ConvertFrom(TomlObject value, TomlSerializerOptions options);
+        object ConvertFrom(TomlObject value, ITomlSerializerContext context);
 
-        object ConvertFromAbsent(TomlSerializerOptions options);
+        object ConvertFromAbsent(ITomlSerializerContext context);
 
-        TomlObject ConvertTo(object value, TomlSerializerOptions options);
+        TomlObject ConvertTo(object value, ITomlSerializerContext context);
 
         internal void DisallowDirectImplementations();
     }

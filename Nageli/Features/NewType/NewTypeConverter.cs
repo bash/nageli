@@ -10,9 +10,9 @@ namespace Nageli.Features.NewType
 
         public NewTypeConverter(NewTypeMetadata metadata) => _metadata = metadata;
 
-        public TNewType ConvertFrom(TomlObject value, TomlSerializerOptions options)
-            => (TNewType)_metadata.Constructor.Invoke(new[] { _metadata.InnerConverter.ConvertFrom(value, options) });
+        public TNewType ConvertFrom(TomlObject value, ITomlSerializerContext context)
+            => (TNewType)_metadata.Constructor.Invoke(new[] { _metadata.InnerConverter.ConvertFrom(value, context) });
 
-        public TomlObject ConvertTo(TNewType value, TomlSerializerOptions options) => throw new NotImplementedException();
+        public TomlObject ConvertTo(TNewType value, ITomlSerializerContext context) => throw new NotImplementedException();
     }
 }

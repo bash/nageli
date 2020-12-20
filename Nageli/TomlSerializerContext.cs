@@ -11,10 +11,7 @@ namespace Nageli
 
         private readonly IDictionary<Type, Type?> _cachedDefaultImplementations = new ConcurrentDictionary<Type, Type?>();
 
-        public TomlSerializerContext(TomlSerializerOptions options)
-        {
-            Options = options;
-        }
+        public TomlSerializerContext(TomlSerializerOptions options) => Options = options;
 
         public TomlSerializerOptions Options { get; }
 
@@ -26,7 +23,7 @@ namespace Nageli
             }
 
             var factory = Options.Converters.First(c => c.CanConvert(typeToConvert));
-            var converter = factory.CreateConverter(typeToConvert, Options);
+            var converter = factory.CreateConverter(typeToConvert, this);
             _cachedConverters.TryAdd(typeToConvert, converter);
             return converter;
         }

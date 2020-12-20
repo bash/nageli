@@ -8,12 +8,12 @@ namespace Nageli.Converters
     {
         public bool CanConvert(Type type) => IsIDictionaryOfString(type) || type.GetInterfaces().Any(IsIDictionaryOfString);
 
-        public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
+        public ITomlConverter CreateConverter(Type typeToConvert, ITomlSerializerContext context)
         {
             var (instanceType, valueType) = GetTypes(typeToConvert);
             return (ITomlConverter) Activator.CreateInstance(
                 typeof(DictionaryConverter<,>).MakeGenericType(valueType, typeToConvert),
-                instanceType, options)!;
+                instanceType, context)!;
         }
 
         private (Type InstanceType, Type ValueType) GetTypes(Type typeToConvert)
