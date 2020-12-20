@@ -8,7 +8,4 @@
     <ItemGroup>
         <PackageReference Include="Tomlyn" Version="0.1.2" />
     </ItemGroup>
-    <ItemGroup>
-        <InternalsVisibleTo Include="Naegeli.Test" />
-    </ItemGroup>
 </Project>

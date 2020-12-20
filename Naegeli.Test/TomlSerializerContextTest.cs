@@ -10,7 +10,7 @@ namespace Naegeli.Test
         [Fact]
         public void DefaultImplementationCanBeResolved()
         {
-            var context = new TomlSerializerContext(
+            var context = TomlSerializerContext.Create(
                 TomlSerializerOptions.Default
                     .AddDefaultImplementation<IInterface, DefaultImplementation>());
             var implementation = context.GetDefaultImplementation(typeof(IInterface));
@@ -24,7 +24,7 @@ namespace Naegeli.Test
                 p => p.HasDefaultImplementation(typeof(string)) == true
                      && p.GetDefaultImplementation(typeof(string)) == typeof(int));
 
-            var context = new TomlSerializerContext(
+            var context = TomlSerializerContext.Create(
                 TomlSerializerOptions.Default.AddDefaultImplementation(provider));
             var implementation = context.GetDefaultImplementation(typeof(string));
             Assert.Equal(typeof(int), implementation);
@@ -36,7 +36,7 @@ namespace Naegeli.Test
             var nonSupportingProvider = Mock.Of<IDefaultImplementationProvider>(
                 p => p.HasDefaultImplementation(It.IsAny<Type>()) == false);
 
-            var context = new TomlSerializerContext(
+            var context = TomlSerializerContext.Create(
                 TomlSerializerOptions.Default
                     .AddDefaultImplementation<IInterface, DefaultImplementation>()
                     .AddDefaultImplementation(nonSupportingProvider));
@@ -47,7 +47,7 @@ namespace Naegeli.Test
         [Fact]
         public void TheLatterDefaultImplementationTakesPrecedence()
         {
-            var context = new TomlSerializerContext(
+            var context = TomlSerializerContext.Create(
                 TomlSerializerOptions.Default
                     .AddDefaultImplementation<IInterface, DefaultImplementation>()
                     .AddDefaultImplementation<IInterface, OtherDefaultImplementation>());
@@ -58,7 +58,7 @@ namespace Naegeli.Test
         [Fact]
         public void OpenGenericDefaultImplementationCanBeResolved()
         {
-            var context = new TomlSerializerContext(
+            var context = TomlSerializerContext.Create(
                 TomlSerializerOptions.Default
                     .AddOpenGenericDefaultImplementation(
                         typeof(IGeneric<>),

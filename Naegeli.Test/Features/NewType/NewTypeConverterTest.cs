@@ -19,7 +19,7 @@ namespace Naegeli.Test.Features.NewType
         [InlineData(typeof(ValueTypeNewTypeWithNoConstructors))]
         public void CreatingTheConverterForNewTypeWithNoSuitableConstructorThrows(Type typeToConvert)
         {
-            var context = new TomlSerializerContext(TomlSerializerOptions.Default.AddNewTypeConverter());
+            var context = TomlSerializerContext.Create(TomlSerializerOptions.Default.AddNewTypeConverter());
             Assert.Throws<TomlException>(() => context.GetConverter(typeToConvert));
         }
 
