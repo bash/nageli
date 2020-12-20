@@ -12,3 +12,4 @@
   * [x] Support for customizable naming policies
   * [x] Support for custom converters
   * [x] Support new types
+  * [ ] Support renames for properties/constructor params
