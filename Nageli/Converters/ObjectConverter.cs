@@ -6,6 +6,7 @@ using Tomlyn.Model;
 
 namespace Nageli.Converters
 {
+    // TODO: objects with no properties should probably be convertible from absent values.
     internal sealed class ObjectConverter<T> : ITomlConverter<T>
         where T : notnull
     {

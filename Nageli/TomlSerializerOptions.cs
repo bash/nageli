@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using Nageli.Converters;
 using Nageli.Converters.Collection;
+using Nageli.DefaultImplementations;
 
 namespace Nageli
 {
@@ -16,6 +17,7 @@ namespace Nageli
         public static TomlSerializerOptions Default { get; } = new(
             propertyNamingPolicy: TomlNamingPolicy.Default,
             absentValuesPolicy: AbsentValuesPolicy.UseDefault,
+            defaultImplementations: ImmutableArray.Create<IDefaultImplementationProvider>(),
             converters: ImmutableArray.Create<ITomlConverterFactory>(
                 new GenericConverterFactory<string>(new SimpleConverter<string>()),
                 new GenericConverterFactory<long>(new SimpleConverter<long>()),
@@ -31,20 +33,26 @@ namespace Nageli
 
         private readonly IDictionary<Type, ITomlConverter> _cachedConverters = new ConcurrentDictionary<Type, ITomlConverter>();
 
+        private readonly IDictionary<Type, Type?> _cachedDefaultImplementations = new ConcurrentDictionary<Type, Type?>();
+
         public AbsentValuesPolicy AbsentValuesPolicy { get; }
 
         public ITomlNamingPolicy PropertyNamingPolicy { get; }
 
         public IImmutableList<ITomlConverterFactory> Converters { get; }
 
+        public IImmutableList<IDefaultImplementationProvider> DefaultImplementations { get; }
+
         private TomlSerializerOptions(
             AbsentValuesPolicy absentValuesPolicy,
             ITomlNamingPolicy propertyNamingPolicy,
-            IImmutableList<ITomlConverterFactory> converters)
+            IImmutableList<ITomlConverterFactory> converters,
+            IImmutableList<IDefaultImplementationProvider> defaultImplementations)
         {
             AbsentValuesPolicy = absentValuesPolicy;
             PropertyNamingPolicy = propertyNamingPolicy;
             Converters = converters;
+            DefaultImplementations = defaultImplementations;
         }
 
         [Pure]
@@ -68,6 +76,28 @@ namespace Nageli
             => ShallowClone(converters: converters.ToImmutableList());
 
         [Pure]
+        public TomlSerializerOptions AddDefaultImplementation(IDefaultImplementationProvider defaultImplementation)
+            => ShallowClone(defaultImplementations: ImmutableArray.Create(defaultImplementation).AddRange(DefaultImplementations));
+
+        /// <param name="abstractType">An abstract type or an interface.</param>
+        /// <param name="concreteType">An non-abstract, non-interface type that inherits from <paramref name="abstractType"/>.</param>
+        /// <exception cref="NotSupportedException">Thrown when either of the types is a generic type definition (i.e. an open generic type).</exception>
+        [Pure]
+        public TomlSerializerOptions AddDefaultImplementation(Type abstractType, Type concreteType)
+            => AddDefaultImplementation(new SimpleDefaultImplementationProvider(abstractType, concreteType));
+
+        /// <typeparam name="TAbstract">An abstract type or an interface.</typeparam>
+        /// <typeparam name="TImplementation">An non-abstract, non-interface type that inherits from <typeparamref name="TAbstract"/>.</typeparam>
+        /// <exception cref="NotSupportedException">Thrown when either of the types is a generic type definition (i.e. an open generic type).</exception>
+        [Pure]
+        public TomlSerializerOptions AddDefaultImplementation<TAbstract, TImplementation>()
+            => AddDefaultImplementation(typeof(TAbstract), typeof(TImplementation));
+
+        [Pure]
+        public TomlSerializerOptions AddOpenGenericDefaultImplementation(Type abstractType, Func<Type[], Type> createImplementation)
+            => AddDefaultImplementation(new OpenGenericDefaultImplementationProvider(abstractType, createImplementation));
+
+        [Pure]
         public ITomlConverter GetConverter(Type typeToConvert)
         {
             if (_cachedConverters.TryGetValue(typeToConvert, out var cachedConverter))
@@ -82,16 +112,32 @@ namespace Nageli
         }
 
         [Pure]
+        public Type? GetDefaultImplementation(Type typeToConvert)
+        {
+            if (_cachedDefaultImplementations.TryGetValue(typeToConvert, out var cachedImplementation))
+            {
+                return cachedImplementation;
+            }
+
+            var provider = DefaultImplementations.FirstOrDefault(c => c.HasDefaultImplementation(typeToConvert));
+            var implementation = provider?.GetDefaultImplementation(typeToConvert);
+            _cachedDefaultImplementations.TryAdd(typeToConvert, implementation);
+            return implementation;
+        }
+
+        [Pure]
         public ITomlConverter<T> GetConverter<T>()
             => GetConverter(typeof(T)).AsTomlConverter<T>();
 
         private TomlSerializerOptions ShallowClone(
             AbsentValuesPolicy? absentValuesPolicy = null,
             ITomlNamingPolicy? propertyNamingPolicy = null,
-            IImmutableList<ITomlConverterFactory>? converters = null)
+            IImmutableList<ITomlConverterFactory>? converters = null,
+            IImmutableList<IDefaultImplementationProvider>? defaultImplementations = null)
             => new(
                 absentValuesPolicy: absentValuesPolicy ?? AbsentValuesPolicy,
                 propertyNamingPolicy: propertyNamingPolicy ?? PropertyNamingPolicy,
-                converters: converters ?? Converters);
+                converters: converters ?? Converters,
+                defaultImplementations: defaultImplementations ?? DefaultImplementations);
     }
 }
