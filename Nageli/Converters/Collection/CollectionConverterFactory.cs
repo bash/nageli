@@ -20,13 +20,7 @@ namespace Nageli.Converters.Collection
                 ? typeToConvert.GetGenericArguments()[0]
                 : typeToConvert.GetInterfaces().Single(IsIEnumerable).GetGenericArguments()[0];
 
-            var typeToCreate = typeToConvert switch
-            {
-                var type when IsIEnumerable(type) || IsReadonlyCollection(type) => typeof(List<>).MakeGenericType(itemType),
-                var type when IsISet(type) => typeof(HashSet<>).MakeGenericType(itemType),
-                var type when IsReadonlySet(type) => typeof(HashSet<>).MakeGenericType(itemType),
-                _ => typeToConvert,
-            };
+            var typeToCreate = options.GetDefaultImplementation(typeToConvert) ?? typeToConvert;
 
             var factory = CollectionCreatorFactories.FirstOrDefault(f => f.CanCreate(typeToCreate, itemType))
                 ?? throw new TomlException($"No creator found for collection {typeToCreate}");

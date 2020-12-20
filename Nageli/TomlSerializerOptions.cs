@@ -33,7 +33,18 @@ namespace Nageli
                     new DictionaryConverterFactory(),
                     new NullableConverterFactory(),
                     new CollectionConverterFactory(),
-                    new ObjectConverterFactory()));
+                    new ObjectConverterFactory()))
+                .AddOpenGenericDefaultImplementation(typeof(IEnumerable<>), typeof(List<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(ICollection<>), typeof(List<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IReadOnlyCollection<>), typeof(List<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IList<>), typeof(List<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IReadOnlyList<>), typeof(List<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(ISet<>), typeof(HashSet<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IReadOnlySet<>), typeof(HashSet<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IImmutableList<>), typeof(ImmutableList<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IImmutableQueue<>), typeof(ImmutableList<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IImmutableSet<>), typeof(ImmutableList<>).MakeGenericType)
+                .AddOpenGenericDefaultImplementation(typeof(IImmutableStack<>), typeof(ImmutableList<>).MakeGenericType);
 
         private readonly IDictionary<Type, ITomlConverter> _cachedConverters = new ConcurrentDictionary<Type, ITomlConverter>();
 
