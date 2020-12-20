@@ -119,31 +119,11 @@ namespace Nageli
 
         [Pure]
         public ITomlConverter GetConverter(Type typeToConvert)
-        {
-            if (_cachedConverters.TryGetValue(typeToConvert, out var cachedConverter))
-            {
-                return cachedConverter;
-            }
-
-            var factory = Converters.First(c => c.CanConvert(typeToConvert));
-            var converter = factory.CreateConverter(typeToConvert, this);
-            _cachedConverters.TryAdd(typeToConvert, converter);
-            return converter;
-        }
+            => new TomlSerializerContext(this).GetConverter(typeToConvert);
 
         [Pure]
         public Type? GetDefaultImplementation(Type typeToConvert)
-        {
-            if (_cachedDefaultImplementations.TryGetValue(typeToConvert, out var cachedImplementation))
-            {
-                return cachedImplementation;
-            }
-
-            var provider = DefaultImplementations.FirstOrDefault(c => c.HasDefaultImplementation(typeToConvert));
-            var implementation = provider?.GetDefaultImplementation(typeToConvert);
-            _cachedDefaultImplementations.TryAdd(typeToConvert, implementation);
-            return implementation;
-        }
+            => new TomlSerializerContext(this).GetDefaultImplementation(typeToConvert);
 
         [Pure]
         public ITomlConverter<T> GetConverter<T>()
