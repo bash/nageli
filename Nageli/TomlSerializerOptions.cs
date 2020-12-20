@@ -91,6 +91,7 @@ namespace Nageli
         /// <exception cref="NotSupportedException">Thrown when either of the types is a generic type definition (i.e. an open generic type).</exception>
         [Pure]
         public TomlSerializerOptions AddDefaultImplementation<TAbstract, TImplementation>()
+            where TImplementation : TAbstract
             => AddDefaultImplementation(typeof(TAbstract), typeof(TImplementation));
 
         [Pure]

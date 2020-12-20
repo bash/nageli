@@ -11,7 +11,8 @@ namespace Nageli.Converters
 
         public ITomlConverter CreateConverter(Type typeToConvert, TomlSerializerOptions options)
         {
-            var constructor = GetConstructorForDeserialization(typeToConvert);
+            var typeToCreate = options.GetDefaultImplementation(typeToConvert) ?? typeToConvert;
+            var constructor = GetConstructorForDeserialization(typeToCreate);
             var parameterConverters = constructor.GetParameters().Select(p => GetCachedParameterInfo(p, options));
             return (ITomlConverter)Activator.CreateInstance(
                 typeof(ObjectConverter<>).MakeGenericType(typeToConvert),

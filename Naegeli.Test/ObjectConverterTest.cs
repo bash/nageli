@@ -113,9 +113,27 @@ namespace Naegeli.Test
             Assert.Throws<TomlException>(() => TomlSerializer.Deserialize<TypeWithNoPublicConstructor>(new TomlTable()));
         }
 
+        [Fact]
+        public void DefaultImplementationIsRespected()
+        {
+            var options = TomlSerializerOptions.Default.AddDefaultImplementation<IInterface, Person>();
+            var value = TomlSerializer.Deserialize<IInterface>(
+                new TomlTable
+                {
+                    [nameof(Person.FirstName)] = "Foo",
+                    [nameof(Person.LastName)] = "Bar",
+                },
+                options);
+            Assert.Equal(new Person("Foo", "Bar"), value);
+        }
+
+        private interface IInterface
+        {
+        }
+
         private sealed record Empty;
 
-        private sealed record Person(string FirstName, string LastName);
+        private sealed record Person(string FirstName, string LastName) : IInterface;
 
         private sealed record ClassWithMultipleConstructorsAndMarkedConstructor
         {
