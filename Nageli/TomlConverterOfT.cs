@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Tomlyn.Model;
 
 namespace Nageli
@@ -7,20 +8,15 @@ namespace Nageli
     {
         new T ConvertFrom(TomlObject value, ITomlSerializerContext context);
 
-        // TODO: move this implementation to ITomlSerializerContext
+        [return: MaybeNull]
         new T ConvertFromAbsent(ITomlSerializerContext context)
-            => context.Options.AbsentValuesPolicy switch
-            {
-                AbsentValuesPolicy.Disallow => throw new TomlException(),
-                AbsentValuesPolicy.UseDefault => default!,
-                _ => throw new NotSupportedException(),
-            };
+            => context.Options.AbsentValuesPolicy.ConvertFromAbsent<T>(context);
 
         TomlObject ConvertTo(T value, ITomlSerializerContext context);
 
         object ITomlConverter.ConvertFrom(TomlObject value, ITomlSerializerContext context) => ConvertFrom(value, context)!;
 
-        object ITomlConverter.ConvertFromAbsent(ITomlSerializerContext context) => ConvertFromAbsent(context)!;
+        object? ITomlConverter.ConvertFromAbsent(ITomlSerializerContext context) => ConvertFromAbsent(context)!;
 
         TomlObject ITomlConverter.ConvertTo(object value, ITomlSerializerContext context) => ConvertTo((T)value, context);
 

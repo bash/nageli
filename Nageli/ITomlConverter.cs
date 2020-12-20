@@ -7,7 +7,7 @@ namespace Nageli
     {
         object ConvertFrom(TomlObject value, ITomlSerializerContext context);
 
-        object ConvertFromAbsent(ITomlSerializerContext context);
+        object? ConvertFromAbsent(ITomlSerializerContext context);
 
         TomlObject ConvertTo(object value, ITomlSerializerContext context);
 

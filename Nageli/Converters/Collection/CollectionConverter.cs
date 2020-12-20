@@ -31,8 +31,8 @@ namespace Nageli.Converters.Collection
             };
         }
 
-        public object ConvertFromAbsent(ITomlSerializerContext context)
-            => _createCollection(Enumerable.Empty<TItem>());
+        public TCollection ConvertFromAbsent(ITomlSerializerContext context)
+            => (TCollection)_createCollection(Enumerable.Empty<TItem>());
 
         public TomlObject ConvertTo(TCollection value, ITomlSerializerContext context) => throw new NotImplementedException();
     }

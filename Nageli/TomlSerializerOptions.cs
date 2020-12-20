@@ -15,7 +15,7 @@ namespace Nageli
     {
         public static TomlSerializerOptions Minimal { get; } = new(
             propertyNamingPolicy: TomlNamingPolicy.Default,
-            absentValuesPolicy: AbsentValuesPolicy.UseDefault,
+            absentValuesPolicy: TomlAbsentValuesPolicy.UseDefault,
             defaultImplementations: ImmutableArray<IDefaultImplementationProvider>.Empty,
             converters: ImmutableArray<ITomlConverterFactory>.Empty);
 
@@ -45,7 +45,7 @@ namespace Nageli
                 .AddOpenGenericDefaultImplementation(typeof(IImmutableSet<>), typeof(ImmutableHashSet<>).MakeGenericType)
                 .AddOpenGenericDefaultImplementation(typeof(IImmutableStack<>), typeof(ImmutableStack<>).MakeGenericType);
 
-        public AbsentValuesPolicy AbsentValuesPolicy { get; }
+        public ITomlAbsentValuesPolicy AbsentValuesPolicy { get; }
 
         public ITomlNamingPolicy PropertyNamingPolicy { get; }
 
@@ -54,7 +54,7 @@ namespace Nageli
         public IImmutableList<IDefaultImplementationProvider> DefaultImplementations { get; }
 
         private TomlSerializerOptions(
-            AbsentValuesPolicy absentValuesPolicy,
+            ITomlAbsentValuesPolicy absentValuesPolicy,
             ITomlNamingPolicy propertyNamingPolicy,
             IImmutableList<ITomlConverterFactory> converters,
             IImmutableList<IDefaultImplementationProvider> defaultImplementations)
@@ -66,7 +66,7 @@ namespace Nageli
         }
 
         [Pure]
-        public TomlSerializerOptions WithAbsentValuesPolicy(AbsentValuesPolicy absentValuesPolicy)
+        public TomlSerializerOptions WithAbsentValuesPolicy(ITomlAbsentValuesPolicy absentValuesPolicy)
             => ShallowClone(absentValuesPolicy: absentValuesPolicy);
 
         [Pure]
@@ -113,7 +113,7 @@ namespace Nageli
             => AddDefaultImplementation(new OpenGenericDefaultImplementationProvider(abstractType, createImplementation));
 
         private TomlSerializerOptions ShallowClone(
-            AbsentValuesPolicy? absentValuesPolicy = null,
+            ITomlAbsentValuesPolicy? absentValuesPolicy = null,
             ITomlNamingPolicy? propertyNamingPolicy = null,
             IImmutableList<ITomlConverterFactory>? converters = null,
             IImmutableList<IDefaultImplementationProvider>? defaultImplementations = null)

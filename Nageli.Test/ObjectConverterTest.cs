@@ -48,7 +48,7 @@ namespace Nageli.Test
         [Fact]
         public void DeserializingTypeWithoutSettersFromTableWithMissingKeysThrowsWhenAbsentValuesAreDisallowed()
         {
-            var options = TomlSerializerOptions.Default.WithAbsentValuesPolicy(AbsentValuesPolicy.Disallow);
+            var options = TomlSerializerOptions.Default.WithAbsentValuesPolicy(TomlAbsentValuesPolicy.Disallow);
             var input = new TomlTable
             {
                 [nameof(Person.FirstName)] = "Foo",
