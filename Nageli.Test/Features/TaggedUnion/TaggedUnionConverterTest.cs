@@ -1,8 +1,7 @@
-using Nageli;
 using Nageli.Features.TaggedUnion;
 using Xunit;
 
-namespace Naegeli.Test.Features.TaggedUnion
+namespace Nageli.Test.Features.TaggedUnion
 {
     public sealed class TaggedUnionConverterTest
     {

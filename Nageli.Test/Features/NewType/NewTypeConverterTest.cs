@@ -1,10 +1,9 @@
 using System;
-using Nageli;
 using Nageli.Features.NewType;
 using Tomlyn.Model;
 using Xunit;
 
-namespace Naegeli.Test.Features.NewType
+namespace Nageli.Test.Features.NewType
 {
     public sealed class NewTypeConverterTest
     {

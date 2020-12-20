@@ -1,9 +1,8 @@
 using System;
-using Nageli;
 using Tomlyn.Model;
 using Xunit;
 
-namespace Naegeli.Test
+namespace Nageli.Test
 {
     public sealed class ObjectConverterTest
     {

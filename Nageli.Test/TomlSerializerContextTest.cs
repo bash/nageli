@@ -1,9 +1,8 @@
 using System;
 using Moq;
-using Nageli;
 using Xunit;
 
-namespace Naegeli.Test
+namespace Nageli.Test
 {
     public sealed class TomlSerializerContextTest
     {
