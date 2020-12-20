@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Nageli.Converters;
+using Nageli.Converters.Collection;
 
 namespace Nageli
 {
@@ -25,6 +26,7 @@ namespace Nageli
                 new GenericConverterFactory<Guid>(new GuidConverter()),
                 new DictionaryConverterFactory(),
                 new NullableConverterFactory(),
+                new CollectionConverterFactory(),
                 new ObjectConverterFactory()));
 
         private readonly IDictionary<Type, ITomlConverter> _cachedConverters = new ConcurrentDictionary<Type, ITomlConverter>();
