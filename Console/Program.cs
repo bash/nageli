@@ -1,7 +1,5 @@
-﻿using System;
-using Funcky.Monads;
+﻿using System.Collections.Immutable;
 using Nageli;
-using Nageli.Features.Option;
 using Nageli.Features.TaggedUnion;
 
 internal static class Program
@@ -10,20 +8,18 @@ internal static class Program
     {
         var options = TomlSerializerOptions.Default
             .WithPropertyNamingPolicy(TomlNamingPolicy.SnakeCase)
-            .WithAbsentValuesPolicy(AbsentValuesPolicy.Disallow)
-            .AddTaggedUnionConverter(TomlTaggedUnionOptions.Default.WithTagNamingPolicy(TomlNamingPolicy.SnakeCase))
-            .AddOptionConverter();
+            .WithAbsentValuesPolicy(TomlAbsentValuesPolicy.Disallow)
+            .AddTaggedUnionConverter(TomlTaggedUnionOptions.Default.WithTagNamingPolicy(TomlNamingPolicy.SnakeCase));
 
-        var taggedUnion1 = TomlSerializer.Deserialize<EmailDelivery>(
-            "type = \"null\"", options);
+        const string toml = "[[email_delivery]]\n" +
+                            "type = \"null\"\n" +
+                            "[[email_delivery]]\n" +
+                            "type = \"pickup\"\ndirectory_path = \"/foo/bar\"";
 
-        Console.WriteLine(taggedUnion1);
-
-        var taggedUnion2 = TomlSerializer.Deserialize<EmailDelivery>(
-            "type = \"pickup\"\ndirectory_path = \"/foo/bar\"", options);
-
-        Console.WriteLine(taggedUnion2);
+        var configuration = TomlSerializer.Deserialize<Configuration>(toml, options);
     }
+
+    internal sealed record Configuration(IImmutableSet<EmailDelivery> EmailDelivery);
 
     [TomlTaggedUnion]
     internal abstract record EmailDelivery
