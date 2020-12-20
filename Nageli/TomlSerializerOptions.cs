@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
@@ -45,10 +44,6 @@ namespace Nageli
                 .AddOpenGenericDefaultImplementation(typeof(IImmutableQueue<>), typeof(ImmutableQueue<>).MakeGenericType)
                 .AddOpenGenericDefaultImplementation(typeof(IImmutableSet<>), typeof(ImmutableHashSet<>).MakeGenericType)
                 .AddOpenGenericDefaultImplementation(typeof(IImmutableStack<>), typeof(ImmutableStack<>).MakeGenericType);
-
-        private readonly IDictionary<Type, ITomlConverter> _cachedConverters = new ConcurrentDictionary<Type, ITomlConverter>();
-
-        private readonly IDictionary<Type, Type?> _cachedDefaultImplementations = new ConcurrentDictionary<Type, Type?>();
 
         public AbsentValuesPolicy AbsentValuesPolicy { get; }
 
