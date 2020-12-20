@@ -3,7 +3,6 @@ using System;
 namespace Nageli
 {
     internal sealed class GenericConverterFactory<T> : ITomlConverterFactory
-        where T : notnull
     {
         private readonly ITomlConverter<T> _converter;
 

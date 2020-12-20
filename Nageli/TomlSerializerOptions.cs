@@ -59,7 +59,6 @@ namespace Nageli
 
         [Pure]
         public TomlSerializerOptions AddConverter<T>(ITomlConverter<T> converter)
-            where T : notnull
             => AddConverter(new GenericConverterFactory<T>(converter));
 
         [Pure]
@@ -82,7 +81,6 @@ namespace Nageli
 
         [Pure]
         public ITomlConverter<T> GetConverter<T>()
-            where T : notnull
             => GetConverter(typeof(T)).AsTomlConverter<T>();
 
         private TomlSerializerOptions ShallowClone(
