@@ -7,16 +7,33 @@ namespace Nageli
     public static class TomlSerializer
     {
         public static TValue Deserialize<TValue>(string toml, TomlSerializerOptions? options = null)
-            => Deserialize<TValue>(Toml.Parse(toml).ToModel(), options);
+            => (TValue)Deserialize(Parse(toml), typeof(TValue), TomlSerializerContext.Create(options));
 
         public static TValue Deserialize<TValue>(TomlObject toml, TomlSerializerOptions? options = null)
-            => (TValue)Deserialize(toml, typeof(TValue), options);
+            => (TValue)Deserialize(toml, typeof(TValue), TomlSerializerContext.Create(options));
+
+        public static TValue Deserialize<TValue>(string toml, ITomlSerializerContext? context = null)
+            => (TValue)Deserialize(Parse(toml), typeof(TValue), context);
+
+        public static TValue Deserialize<TValue>(TomlObject toml, ITomlSerializerContext? context = null)
+            => (TValue)Deserialize(toml, typeof(TValue), context);
+
+        public static object Deserialize(string toml, Type type, TomlSerializerOptions? options = null)
+            => Deserialize(Parse(toml), type, TomlSerializerContext.Create(options));
 
         public static object Deserialize(TomlObject toml, Type type, TomlSerializerOptions? options = null)
+            => Deserialize(toml, type, TomlSerializerContext.Create(options));
+
+        public static object Deserialize(string toml, Type type, ITomlSerializerContext? context = null)
+            => Deserialize(Parse(toml), type, context);
+
+        public static object Deserialize(TomlObject toml, Type type, ITomlSerializerContext? context = null)
         {
-            var context = TomlSerializerContext.Create(options ?? TomlSerializerOptions.Default);
-            var converter = context.GetConverter(type);
-            return converter.ConvertFrom(toml, context);
+            var contextOrDefault = context ?? TomlSerializerContext.Create();
+            var converter = contextOrDefault.GetConverter(type);
+            return converter.ConvertFrom(toml, contextOrDefault);
         }
+
+        private static TomlObject Parse(string toml) => Toml.Parse(toml).ToModel();
     }
 }
