@@ -1,4 +1,4 @@
-# Naegeli
+# Nägeli
 ![Build](https://github.com/bash/nageli/workflows/Build/badge.svg)
 
 ## MVP
