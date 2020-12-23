@@ -4,6 +4,6 @@ namespace Nageli.Parsing
 {
     internal interface IParser
     {
-        TomlTable Parse(string toml);
+        TomlObject Parse(string toml);
     }
 }
