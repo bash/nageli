@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli.Converters
 {
@@ -30,7 +30,7 @@ namespace Nageli.Converters
 
             foreach (var key in table.Keys)
             {
-                var value = table.TryGetToml(key, out var dictionaryValue)
+                var value = table.TryGetValue(key, out var dictionaryValue)
                     ? _valueConverter.ConvertFrom(dictionaryValue, context)
                     : throw new InvalidOperationException("This should never happen");
                 dictionary[key] = value;

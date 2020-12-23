@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli
 {

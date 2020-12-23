@@ -1,0 +1,23 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+
+namespace Nageli.Model
+{
+    public sealed record TomlArray : TomlObject, IReadOnlyList<TomlObject>
+    {
+        public static TomlArray Empty { get; } = new(ImmutableArray<TomlObject>.Empty);
+
+        private readonly IImmutableList<TomlObject> _list;
+
+        private TomlArray(IImmutableList<TomlObject> list) => _list = list;
+
+        public IEnumerator<TomlObject> GetEnumerator() => _list.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public int Count => _list.Count;
+
+        public TomlObject this[int index] => _list[index];
+    }
+}

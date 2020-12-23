@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli.Converters
 {
@@ -17,7 +17,7 @@ namespace Nageli.Converters
         {
             var converter = value switch
             {
-                TomlArray or TomlTableArray => (ITomlConverter)context.GetConverter<IEnumerable<object>>(),
+                TomlArray => (ITomlConverter)context.GetConverter<IEnumerable<object>>(),
                 TomlString => context.GetConverter<string>(),
                 TomlInteger => context.GetConverter<long>(),
                 TomlBoolean => context.GetConverter<bool>(),

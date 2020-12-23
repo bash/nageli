@@ -1,6 +1,6 @@
 using System;
 using Nageli.Features.NewType;
-using Tomlyn.Model;
+using Nageli.Model;
 using Xunit;
 
 namespace Nageli.Test.Features.NewType
@@ -59,11 +59,9 @@ namespace Nageli.Test.Features.NewType
                     new GenericNewType<GenericNewType<GenericNewType<long>>>(new GenericNewType<GenericNewType<long>>(new GenericNewType<long>(42)))
                 },
                 {
-                    new TomlTable
-                    {
-                        [nameof(Person.FirstName)] = "Peter",
-                        [nameof(Person.LastName)] = "Pan",
-                    },
+                    TomlTable.Empty
+                        .Add(nameof(Person.FirstName), new TomlString("Peter"))
+                        .Add(nameof(Person.LastName), new TomlString("Pan")),
                     new GenericNewType<Person>(new Person("Peter", "Pan"))
                 },
                 {

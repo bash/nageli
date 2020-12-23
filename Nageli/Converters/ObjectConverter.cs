@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli.Converters
 {
@@ -44,7 +44,7 @@ namespace Nageli.Converters
 
             // TODO: support nullable reference types
 
-            return table.TryGetToml(propertyName, out var tomlObject)
+            return table.TryGetValue(propertyName, out var tomlObject)
                 ? parameter.Converter.ConvertFrom(tomlObject, context)
                 : parameter.Converter.ConvertFromAbsent(context);
         }

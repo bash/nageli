@@ -1,5 +1,5 @@
 using System;
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli.Converters
 {
@@ -28,7 +28,7 @@ namespace Nageli.Converters
                 long @long => new TomlInteger(@long),
                 bool @bool => new TomlBoolean(@bool),
                 double @double => new TomlFloat(@double),
-                DateTime dateTime => new TomlDateTime(ObjectKind.LocalDateTime, dateTime),
+                DateTime dateTime => new TomlDateTime(dateTime),
                 _ => throw new InvalidOperationException($"The type `{value.GetType()}` of the object is invalid. Only long, bool, double, DateTime and TomlObject are supported"),
             };
     }
