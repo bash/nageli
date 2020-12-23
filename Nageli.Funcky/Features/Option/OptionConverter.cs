@@ -1,5 +1,5 @@
 using Funcky.Monads;
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli.Features.Option
 {

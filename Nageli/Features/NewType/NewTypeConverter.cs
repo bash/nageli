@@ -1,6 +1,6 @@
 using System;
 using System.Linq.Expressions;
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli.Features.NewType
 {

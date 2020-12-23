@@ -1,4 +1,4 @@
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli.Features.TaggedUnion
 {
@@ -17,14 +17,14 @@ namespace Nageli.Features.TaggedUnion
 
         private T ConvertFrom(TomlTable table, ITomlSerializerContext context)
         {
-            if (!table.TryGetToml(_metadata.TagKey, out var tag))
+            if (!table.TryGetValue(_metadata.TagKey, out var tag))
             {
                 throw new TomlException($"Missing key \"{_metadata.TagKey}\" in table");
             }
 
             if (tag is not TomlString tagString)
             {
-                throw new TomlException($"Unexpected type \"{tag.Kind}\" for \"{_metadata.TagKey}\", must be a string");
+                throw new TomlException($"Unexpected type \"{tag.GetType()}\" for \"{_metadata.TagKey}\", must be a string");
             }
 
             if (!_metadata.VariantsByTag.TryGetValue(tagString.Value, out var variant))

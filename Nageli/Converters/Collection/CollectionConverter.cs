@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tomlyn.Model;
+using Nageli.Model;
 
 namespace Nageli.Converters.Collection
 {
@@ -19,17 +19,9 @@ namespace Nageli.Converters.Collection
         }
 
         public TCollection ConvertFrom(TomlObject value, ITomlSerializerContext context)
-        {
-            TCollection CreateCollection(IEnumerable<TomlObject> values)
-                => (TCollection)_createCollection(values.Select(v => _itemConverter.ConvertFrom(v, context)));
-
-            return value switch
-            {
-                TomlTableArray tableArray => CreateCollection(tableArray),
-                TomlArray tomlArray => CreateCollection(tomlArray.GetTomlEnumerator()),
-                _ => throw new TomlException(),
-            };
-        }
+            => value is TomlArray tomlArray
+                ? (TCollection)_createCollection(tomlArray.Select(v => _itemConverter.ConvertFrom(v, context)))
+                : throw new TomlException();
 
         public TCollection ConvertFromAbsent(ITomlSerializerContext context)
             => (TCollection)_createCollection(Enumerable.Empty<TItem>());

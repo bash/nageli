@@ -1,6 +1,6 @@
 using System;
-using Tomlyn;
-using Tomlyn.Model;
+using Nageli.Model;
+using Nageli.Parsing;
 
 namespace Nageli
 {
@@ -22,6 +22,10 @@ namespace Nageli
             return converter.ConvertFrom(toml, contextOrDefault);
         }
 
-        private static TomlObject Parse(string toml) => Toml.Parse(toml).ToModel();
+        private static TomlObject Parse(string toml)
+        {
+            var parser = new TomlynParser();
+            return parser.Parse(toml);
+        }
     }
 }
