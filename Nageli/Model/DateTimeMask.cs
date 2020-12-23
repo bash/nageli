@@ -2,7 +2,7 @@ namespace Nageli.Model
 {
     public enum DateTimeMask
     {
-        DateAndTime,
+        None,
         Date,
         Time,
     }
