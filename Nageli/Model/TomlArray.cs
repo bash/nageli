@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace Nageli.Model
 {
@@ -12,6 +14,12 @@ namespace Nageli.Model
 
         private TomlArray(IImmutableList<TomlObject> list) => _list = list;
 
+        [Pure]
+        public TomlArray Add(TomlObject value) => new(_list.Add(value));
+
+        [Pure]
+        public TomlArray AddRange(IEnumerable<TomlObject> values) => new(_list.AddRange(values));
+
         public IEnumerator<TomlObject> GetEnumerator() => _list.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -19,5 +27,7 @@ namespace Nageli.Model
         public int Count => _list.Count;
 
         public TomlObject this[int index] => _list[index];
+
+        public bool Equals(TomlArray? other) => other is not null && this.SequenceEqual(other);
     }
 }
