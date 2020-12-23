@@ -9,6 +9,16 @@ namespace Nageli.DefaultImplementations
 
         public OpenGenericDefaultImplementationProvider(Type abstractType, Func<Type[], Type> createConcreteType)
         {
+            if (!abstractType.IsAbstract && !abstractType.IsInterface)
+            {
+                throw new ArgumentException("Type must be abstract or an interface", nameof(abstractType));
+            }
+
+            if (!abstractType.IsGenericTypeDefinition)
+            {
+                throw new ArgumentException("Type must be an open generic", nameof(abstractType));
+            }
+
             _abstractType = abstractType;
             _createConcreteType = createConcreteType;
         }
