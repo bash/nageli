@@ -2,7 +2,7 @@ using System;
 
 namespace Nageli
 {
-    public interface ITomlSerializerContext
+    public interface ITomlSerializerContext : ITomlToSerializerContext
     {
         TomlSerializerOptions Options { get; }
 

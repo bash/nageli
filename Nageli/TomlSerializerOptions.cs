@@ -11,7 +11,7 @@ namespace Nageli
 {
     // TODO: make object deserialization strategy (constructor vs properties) configurable
     // TODO: Add a default naming policy that is used when the other policies are not specified
-    public sealed record TomlSerializerOptions
+    public sealed record TomlSerializerOptions : ITomlToSerializerContext
     {
         public static TomlSerializerOptions Minimal { get; } = new(
             propertyNamingPolicy: TomlNamingPolicy.Default,
@@ -124,5 +124,7 @@ namespace Nageli
                 propertyNamingPolicy: propertyNamingPolicy ?? PropertyNamingPolicy,
                 converters: converters ?? Converters,
                 defaultImplementations: defaultImplementations ?? DefaultImplementations);
+
+        public ITomlSerializerContext ToSerializerContext() => TomlSerializerContext.Create(this);
     }
 }

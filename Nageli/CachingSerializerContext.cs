@@ -35,5 +35,7 @@ namespace Nageli
             var provider = Options.DefaultImplementations.FirstOrDefault(c => c.HasDefaultImplementation(typeToConvert));
             return provider?.GetDefaultImplementation(typeToConvert);
         }
+
+        public ITomlSerializerContext ToSerializerContext() => this;
     }
 }
