@@ -29,6 +29,7 @@ namespace Nageli
                     new GenericConverterFactory<int>(new Int32Converter()),
                     new GenericConverterFactory<DateTime>(new SimpleConverter<DateTime>()),
                     new GenericConverterFactory<Guid>(new GuidConverter()),
+                    new GenericConverterFactory<object>(new DynamicObjectConverter()),
                     new DictionaryConverterFactory(),
                     new NullableConverterFactory(),
                     new CollectionConverterFactory(),
